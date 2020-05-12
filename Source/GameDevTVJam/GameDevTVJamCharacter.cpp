@@ -54,6 +54,10 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGameDevTVJamCharacter::MoveRight);
+	//PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
+	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGameDevTVJamCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGameDevTVJamCharacter::TouchStopped);
@@ -74,5 +78,17 @@ void AGameDevTVJamCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, c
 void AGameDevTVJamCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	StopJumping();
+}
+
+void AGameDevTVJamCharacter::PerformCrouch()
+{
+	// Use ACharacter's interface
+	Crouch();
+}
+
+void AGameDevTVJamCharacter::PerformUnCrouch()
+{
+	// Use ACharacter's interface
+	UnCrouch();
 }
 

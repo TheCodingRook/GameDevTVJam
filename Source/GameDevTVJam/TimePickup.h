@@ -18,6 +18,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
 		void WasCollected_Implementation() override;
 
+
 protected:
 	// Set the amount of extra time the pick up gives to the character (in seconds)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Extra Time")

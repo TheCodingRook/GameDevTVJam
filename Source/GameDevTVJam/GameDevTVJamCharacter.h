@@ -30,6 +30,12 @@ protected:
 	/** Handle touch stop event. */
 	void TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location);
 
+	/** Called for starting crouching */
+	void PerformCrouch();
+
+	/** Called for ending crouching */
+	void PerformUnCrouch();
+
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface

@@ -69,6 +69,6 @@ protected:
 
 private:
 	// The main boolean member field that determines if this PuzzleElement is activated or not
-	UPROPERTY(VisibleAnywhere, Category = "Trigger")
+	UPROPERTY(EditAnywhere, Category = "Trigger")
 	bool bIsTriggered;
 };
