@@ -6,6 +6,7 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GrabbingAbility.h"
 
 AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 {
@@ -43,6 +44,9 @@ AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	// Create the custom physics handle component for grabbing objects
+	Grabber = CreateDefaultSubobject<UGrabbingAbility>(TEXT("Grabber"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,9 +62,21 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
+	PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AGameDevTVJamCharacter::Grab);
+	PlayerInputComponent->BindAction("Grab", IE_Released, this, &AGameDevTVJamCharacter::Drop);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGameDevTVJamCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGameDevTVJamCharacter::TouchStopped);
+}
+
+void AGameDevTVJamCharacter::Grab()
+{
+	Grabber->Grab();
+}
+
+void AGameDevTVJamCharacter::Drop()
+{
+	Grabber->Drop();
 }
 
 void AGameDevTVJamCharacter::MoveRight(float Value)
