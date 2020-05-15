@@ -21,6 +21,8 @@ class AGameDevTVJamCharacter : public ACharacter
 
 protected:
 
+	class UGrabbingAbility* Grabber;
+
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
@@ -39,6 +41,12 @@ protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
+
+	/** Called for grabbing */
+	void Grab();
+
+	/** Called for ending grabbing */
+	void Drop();
 
 
 public:
