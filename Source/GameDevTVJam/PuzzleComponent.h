@@ -6,6 +6,18 @@
 #include "Components/ActorComponent.h"
 #include "PuzzleComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class LogicGateType : uint8
+{
+	OR UMETA(DisplayName = "OR"),
+	AND UMETA(DisplayName = "AND"),
+	XOR UMETA(DisplayName = "XOR"),
+	NAND UMETA(DisplayName = "NAND"),
+	NOR UMETA(DisplayName = "NOR"),
+	XNOR UMETA(DisplayName = "XNOR")
+};
+
+
 // Forward declarations
 class UPuzzleElementComponent;
 
@@ -39,6 +51,10 @@ public:
 	bool AreAllPuzzleElementsActive();
 
 protected:
+	// What type of logic connects the various puzzle elements?
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Puzzle Elements")
+		LogicGateType ElementsLogic;
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
 

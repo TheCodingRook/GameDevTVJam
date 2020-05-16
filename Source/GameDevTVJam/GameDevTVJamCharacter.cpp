@@ -49,13 +49,18 @@ AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 	Grabber = CreateDefaultSubobject<UGrabbingAbility>(TEXT("Grabber"));
 }
 
+void AGameDevTVJamCharacter::SetEncumbered(bool NewState)
+{
+	bIsEncumbered = NewState;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
 void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// set up gameplay key bindings
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AGameDevTVJamCharacter::AttemptJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGameDevTVJamCharacter::MoveRight);
 	//PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
@@ -69,14 +74,17 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGameDevTVJamCharacter::TouchStopped);
 }
 
-void AGameDevTVJamCharacter::Grab()
+void AGameDevTVJamCharacter::AddKeyToInventory(AActor* KeyToAdd)
 {
-	Grabber->Grab();
+	InventoryKeyList.AddUnique(KeyToAdd);
 }
 
-void AGameDevTVJamCharacter::Drop()
+void AGameDevTVJamCharacter::AttemptJump()
 {
-	Grabber->Drop();
+	if (!bIsEncumbered)
+	{
+		Jump();
+	}
 }
 
 void AGameDevTVJamCharacter::MoveRight(float Value)
@@ -96,10 +104,23 @@ void AGameDevTVJamCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, c
 	StopJumping();
 }
 
+void AGameDevTVJamCharacter::Grab()
+{
+	Grabber->Grab();
+}
+
+void AGameDevTVJamCharacter::Drop()
+{
+	Grabber->Drop();
+}
+
 void AGameDevTVJamCharacter::PerformCrouch()
 {
-	// Use ACharacter's interface
-	Crouch();
+	if (!bIsEncumbered && !GetMovementComponent()->IsFalling())
+	{
+		// Use ACharacter's interface
+		Crouch();
+	}
 }
 
 void AGameDevTVJamCharacter::PerformUnCrouch()

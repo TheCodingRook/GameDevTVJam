@@ -2,6 +2,8 @@
 
 
 #include "InteractablePropBase.h"
+#include "InteractionComponentBase.h"
+#include "Components/SphereComponent.h"
 
 // Sets default values
 AInteractablePropBase::AInteractablePropBase()
@@ -13,13 +15,39 @@ AInteractablePropBase::AInteractablePropBase()
 	PropMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Prop Mesh"));
 	PropMesh->SetupAttachment(RootComponent);
 
+	InteractionTrigger = CreateDefaultSubobject<USphereComponent>("Interaction Trigger");
+	InteractionTrigger->SetSphereRadius(100.f);
+	InteractionTrigger->SetupAttachment(PropMesh);
+}
+
+void AInteractablePropBase::OnWasInteractedWith_Implementation()
+{
+	// To be extended in Blueprint
+}
+
+void AInteractablePropBase::OnReEnableInteraction_Implementation()
+{
+	// To be extended in Blueprint
 }
 
 // Called when the game starts or when spawned
 void AInteractablePropBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	if (!InteractionClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("You have not specified an interaction component class for: %s"), *GetName())
+	}
+	else
+	{
+		InteractionCommand = NewObject<UInteractionComponentBase>(this, InteractionClass);
+		if (InteractionCommand)
+		{
+			InteractionCommand->RegisterComponent();
+		}
+	}
+
 }
 
 // Called every frame

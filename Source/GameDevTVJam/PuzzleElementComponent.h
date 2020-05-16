@@ -6,9 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "PuzzleElementComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementTriggered);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementUnTriggered);
-
 UENUM(BlueprintType)
 enum class EPuzzleElementType : uint8
 {
@@ -16,6 +13,9 @@ enum class EPuzzleElementType : uint8
 	Toggle UMETA(DisplayName = "Toggle Switch"),
 	Type_None UMETA(DisplayName = "Null type")
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementTriggered, EPuzzleElementType, ElementType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementUnTriggered, EPuzzleElementType, ElementType);
 
 /*
  * A generic base component class to implement actors as "puzzle elements" that trigger events or solve other puzzles in combination with

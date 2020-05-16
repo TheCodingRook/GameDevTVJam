@@ -2,6 +2,8 @@
 
 
 #include "PuzzleComponent.h"
+#include "PuzzleElementComponent.h"
+#include "GameFramework/Actor.h"
 
 // Sets default values for this component's properties
 UPuzzleComponent::UPuzzleComponent()
@@ -10,12 +12,26 @@ UPuzzleComponent::UPuzzleComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 bool UPuzzleComponent::AreAllPuzzleElementsActive()
 {
-	return false;
+	if (PuzzleElementsList.Num()>0)
+	{
+		for (UPuzzleElementComponent* PuzzleElement : PuzzleElementsList)
+		{
+			if (!PuzzleElement->IsTriggered())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
 // Called when the game starts
@@ -23,7 +39,14 @@ void UPuzzleComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
+	// Populate the PuzzleElements list
+	for (AActor* PuzzleElementActor : ActorsList)
+	{
+		if (UPuzzleElementComponent* PuzzleElementComponentFound = Cast<UPuzzleElementComponent>(PuzzleElementActor->GetComponentByClass(UPuzzleElementComponent::StaticClass())))
+		{
+			PuzzleElementsList.AddUnique(PuzzleElementComponentFound);
+		}
+	}
 
 }
 

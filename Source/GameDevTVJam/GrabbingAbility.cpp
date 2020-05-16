@@ -44,12 +44,15 @@ void UGrabbingAbility::Grab()
 		 
 			// Grab from centre of mass so that it is easier to handle.
 			GrabComponentAtLocation(HitResult.GetComponent(), NAME_None, HitResult.GetComponent()->GetCenterOfMass());
+			OwnerCharacter->SetEncumbered(true);
 		 }
 	 }
 }
 
 void UGrabbingAbility::Drop()
 {
+	OwnerCharacter = Cast<AGameDevTVJamCharacter>(GetOwner());
+
 	// First make sure we are indeed grabbing something!
 	if (GrabbedComponent)
 	{
@@ -57,6 +60,7 @@ void UGrabbingAbility::Drop()
 		//GrabbedComponent->SetSimulatePhysics(false);
 
 		ReleaseComponent();
+		OwnerCharacter->SetEncumbered(false);
 	}
 }
 

@@ -19,10 +19,19 @@ class AGameDevTVJamCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	void AddKeyToInventory(AActor* KeyToAdd);
+
 protected:
 
 	class UGrabbingAbility* Grabber;
 
+	/** A simple array to hold keys the player collects */
+	TArray<AActor*> InventoryKeyList;
+
+	/** Custom call for jump */
+	void AttemptJump();
+	
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
@@ -56,4 +65,16 @@ public:
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	// Returns encumbered state
+	UFUNCTION(BlueprintPure)
+	bool IsEncumbered() const { return bIsEncumbered; }
+
+	// Sets the encumbered state of the character
+	void SetEncumbered(bool NewState);
+
+private:
+	// Bool to store the player's current carrying status
+	bool bIsEncumbered;
+
 };

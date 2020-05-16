@@ -27,12 +27,34 @@ public:
 	UFUNCTION(BlueprintCallable)
 	UStaticMeshComponent* GetPropMesh() const {	return PropMesh; }
 
+	UFUNCTION(BlueprintPure, Category = "Interaction Trigger")
+	class USphereComponent* GetInteractionTrigger() const { return InteractionTrigger; }
+
+	UFUNCTION(BlueprintPure, Category = "Interaction")
+	class UInteractionComponentBase* GetInteractionCommand() const { return InteractionCommand; }
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void OnWasInteractedWith();
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void OnReEnableInteraction();
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = "true"))
 	UStaticMeshComponent* PropMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Interaction Trigger", meta = (AllowPrivateAccess = "true"))
+	class USphereComponent* InteractionTrigger;
+
+	// Class that implements the interaction for this prop
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UInteractionComponentBase> InteractionClass;
+
+	// Interaction command for this prop
+	UPROPERTY(VisibleAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	UInteractionComponentBase* InteractionCommand;
 };
