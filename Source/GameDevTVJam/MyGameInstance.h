@@ -14,6 +14,7 @@ class GAMEDEVTVJAM_API UMyGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 
+public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction Commands")
 	void PushNewInteractionCommand(class UInteractionComponentBase* NewInteraction);
 

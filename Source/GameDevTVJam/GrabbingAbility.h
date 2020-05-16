@@ -44,6 +44,9 @@ private:
 	// Private member to store the pointer to the player character
 	class AGameDevTVJamCharacter* OwnerCharacter;
 
+	// Store the pointer of the prop we are currently holding
+	class AInteractablePropBase* PropHeld;
+
 	// Store the pointer to a prop that was recently dropped so we can reset its physics simulation setting
 	AActor* RecentlyDroppedActor;
 };

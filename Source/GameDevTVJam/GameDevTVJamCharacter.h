@@ -19,8 +19,14 @@ class AGameDevTVJamCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	UFUNCTION(BlueprintCallable, Category = "Pickups")
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void AddKeyToInventory(AActor* KeyToAdd);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void RemoveKeyFromInventory(AActor* KeyToRemove);
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
 
 protected:
 
@@ -57,6 +63,11 @@ protected:
 	/** Called for ending grabbing */
 	void Drop();
 
+	/** Called for interacting with an interactable */
+	void Interact();
+
+	/** Called for stopping interaction with an interactable */
+	void StopInteracting();
 
 public:
 	AGameDevTVJamCharacter();

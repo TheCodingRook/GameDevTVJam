@@ -59,6 +59,13 @@ void UGrabbingAbility::Drop()
 		GrabbedComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);
 		//GrabbedComponent->SetSimulatePhysics(false);
 
+		PropHeld = Cast<AInteractablePropBase>(GrabbedComponent->GetOwner());
+		if (PropHeld)
+		{
+			PropHeld->OnReEnableInteraction();
+			PropHeld = nullptr;
+		}
+
 		ReleaseComponent();
 		OwnerCharacter->SetEncumbered(false);
 	}

@@ -20,6 +20,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void ExecuteInteraction(class AGameDevTVJamCharacter* Instigator);
+	virtual void StopInteraction(AGameDevTVJamCharacter* Instigator);
 
 	UFUNCTION(BlueprintPure, Category = "Widget")
 		FText GetInteractionText() const { return InteractionText; }

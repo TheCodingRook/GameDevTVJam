@@ -18,4 +18,5 @@ protected:
 	UGrabInteraction();
 
 	virtual void ExecuteInteraction(AGameDevTVJamCharacter* Instigator) override;
+	virtual void StopInteraction(AGameDevTVJamCharacter* Instigator) override;
 };

@@ -7,6 +7,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GrabbingAbility.h"
+#include "InteractionComponentBase.h"
+#include "MyGameInstance.h"
 
 AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 {
@@ -67,8 +69,10 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
-	PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AGameDevTVJamCharacter::Grab);
-	PlayerInputComponent->BindAction("Grab", IE_Released, this, &AGameDevTVJamCharacter::Drop);
+	//PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AGameDevTVJamCharacter::Grab);
+	//PlayerInputComponent->BindAction("Grab", IE_Released, this, &AGameDevTVJamCharacter::Drop);
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AGameDevTVJamCharacter::Interact);
+	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AGameDevTVJamCharacter::StopInteracting);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGameDevTVJamCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGameDevTVJamCharacter::TouchStopped);
@@ -77,6 +81,11 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 void AGameDevTVJamCharacter::AddKeyToInventory(AActor* KeyToAdd)
 {
 	InventoryKeyList.AddUnique(KeyToAdd);
+}
+
+void AGameDevTVJamCharacter::RemoveKeyFromInventory(AActor* KeyToRemove)
+{
+	InventoryKeyList.RemoveSingleSwap(KeyToRemove);
 }
 
 void AGameDevTVJamCharacter::AttemptJump()
@@ -129,3 +138,18 @@ void AGameDevTVJamCharacter::PerformUnCrouch()
 	UnCrouch();
 }
 
+void AGameDevTVJamCharacter::Interact()
+{
+	if (UInteractionComponentBase* InteractionToExecute = Cast<UMyGameInstance>(GetGameInstance())->GetLatestInteractionCommand())
+	{
+		InteractionToExecute->ExecuteInteraction(this);
+	}
+}
+
+void AGameDevTVJamCharacter::StopInteracting()
+{
+	if (UInteractionComponentBase* InteractionToExecute = Cast<UMyGameInstance>(GetGameInstance())->GetLatestInteractionCommand())
+	{
+		InteractionToExecute->StopInteraction(this);
+	}
+}

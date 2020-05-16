@@ -32,6 +32,14 @@ void UInteractionComponentBase::ExecuteInteraction(AGameDevTVJamCharacter* Insti
 	}
 }
 
+void UInteractionComponentBase::StopInteraction(AGameDevTVJamCharacter* Instigator)
+{
+	if (AInteractablePropBase* OwnerProp = Cast<AInteractablePropBase>(GetOwner()))
+	{
+		// end interaction, implement in subclasses
+	}
+}
+
 // Called when the game starts
 void UInteractionComponentBase::BeginPlay()
 {
