@@ -7,6 +7,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GrabbingAbility.h"
+#include "ClimbingAbility.h"
 #include "InteractionComponentBase.h"
 #include "MyGameInstance.h"
 
@@ -49,6 +50,20 @@ AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 
 	// Create the custom physics handle component for grabbing objects
 	Grabber = CreateDefaultSubobject<UGrabbingAbility>(TEXT("Grabber"));
+
+	// Create the custom climbing ability component to enable climbing
+	ClimbingAbility = CreateDefaultSubobject<UClimbingAbility>(TEXT("Climbing Ability"));
+
+}
+
+void AGameDevTVJamCharacter::SetCanClimb(bool NewClimbSetting)
+{
+	bCanClimb = NewClimbSetting;
+}
+
+void AGameDevTVJamCharacter::SetIsClimbing(bool NewClimbingState)
+{
+	bIsClimbing = NewClimbingState;
 }
 
 void AGameDevTVJamCharacter::SetEncumbered(bool NewState)
@@ -69,8 +84,7 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
-	//PlayerInputComponent->BindAction("Grab", IE_Pressed, this, &AGameDevTVJamCharacter::Grab);
-	//PlayerInputComponent->BindAction("Grab", IE_Released, this, &AGameDevTVJamCharacter::Drop);
+	PlayerInputComponent->BindAction("Climb", IE_Pressed, this, &AGameDevTVJamCharacter::Climb);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AGameDevTVJamCharacter::Interact);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AGameDevTVJamCharacter::StopInteracting);
 
@@ -90,7 +104,7 @@ void AGameDevTVJamCharacter::RemoveKeyFromInventory(AActor* KeyToRemove)
 
 void AGameDevTVJamCharacter::AttemptJump()
 {
-	if (!bIsEncumbered)
+	if (!bIsEncumbered && !bIsClimbing)
 	{
 		Jump();
 	}
@@ -105,7 +119,10 @@ void AGameDevTVJamCharacter::MoveRight(float Value)
 void AGameDevTVJamCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// jump on any touch
-	Jump();
+	if (!bIsEncumbered && !bIsClimbing)
+	{
+		Jump();
+	}
 }
 
 void AGameDevTVJamCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -152,4 +169,14 @@ void AGameDevTVJamCharacter::StopInteracting()
 	{
 		InteractionToExecute->StopInteraction(this);
 	}
+}
+
+void AGameDevTVJamCharacter::Climb()
+{
+	ClimbingAbility->Climb();
+}
+
+void AGameDevTVJamCharacter::FinishClimbing()
+{
+	ClimbingAbility->FinishClimbing();
 }

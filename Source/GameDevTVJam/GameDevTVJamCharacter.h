@@ -31,6 +31,7 @@ class AGameDevTVJamCharacter : public ACharacter
 protected:
 
 	class UGrabbingAbility* Grabber;
+	class UClimbingAbility* ClimbingAbility;
 
 	/** A simple array to hold keys the player collects */
 	TArray<AActor*> InventoryKeyList;
@@ -69,6 +70,13 @@ protected:
 	/** Called for stopping interaction with an interactable */
 	void StopInteracting();
 
+	/** Called for climbing */
+	void Climb ();
+
+	/** Called by the Animation Blueprint to finalize the climbing process */
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	void FinishClimbing();
+
 public:
 	AGameDevTVJamCharacter();
 
@@ -84,8 +92,34 @@ public:
 	// Sets the encumbered state of the character
 	void SetEncumbered(bool NewState);
 
+	// Sets the climbing ability
+	UFUNCTION(BlueprintCallable)
+		void SetCanClimb(bool NewClimbSetting);
+
+	// Returns whether character is climbing
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	bool IsClimbing() const { return bIsClimbing; }
+
+	// Sets the climbing boolean
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	void SetIsClimbing(bool NewClimbingState);
+
+	// Gets Climbing Ability component
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
+
+
+protected:
+	// Bool to let the animation blueprint know character is climbing
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+	bool bIsClimbing;
+
 private:
 	// Bool to store the player's current carrying status
 	bool bIsEncumbered;
+
+	// Bool to store the player's current climbing ability status (enabled or disabled)
+	UPROPERTY(EditAnywhere, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!
+	bool bCanClimb;
 
 };

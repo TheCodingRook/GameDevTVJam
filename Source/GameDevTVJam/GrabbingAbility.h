@@ -7,7 +7,7 @@
 #include "GrabbingAbility.generated.h"
 
 /**
- * 
+ * Custom class to implement grabbing props in the world via a physics handle component
  */
 UCLASS(CollapseCategories, ClassGroup = Custom, Blueprintable, meta = (BlueprintSpawnableComponent))
 class GAMEDEVTVJAM_API UGrabbingAbility : public UPhysicsHandleComponent
