@@ -58,11 +58,14 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	// List of PuzzlElement object references from the above actors' list
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Puzzle Elements")
+	TArray<UPuzzleElementComponent*> PuzzleElementsList;
+
 private:
 	// List of actors that will be the puzzle elements that this actor is linked to as part of a puzzle
 	UPROPERTY(EditAnywhere, Category = "Puzzle Elements")
 	TArray<AActor*> ActorsList;
 
-	// List of PuzzlElement object references from the above actors' list
-	TArray<UPuzzleElementComponent*> PuzzleElementsList;
+	
 };

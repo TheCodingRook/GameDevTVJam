@@ -40,11 +40,11 @@ protected:
 
 	// How far in front of us can we detect climbable ledges/walls?
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
-	float ClimbProximity = 120;
+	float ClimbProximity = 75;
 
 	// Radius of climbing detection sphere when facing forward (i.e. how high up can we detect ledges?)
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
-	float ClimbDetectRadius = 10.f;
+	float ClimbDetectRadius = 50.f;
 
 	// Vertical offset for secondary trace to detect ledge height
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Settings")
