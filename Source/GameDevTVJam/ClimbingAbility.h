@@ -28,13 +28,19 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Climbing")
 	void FinishClimbing();
 
+	UFUNCTION(BlueprintPure, Category = "Climbing")
+	FVector GetLocationAfterClimbing() const { return LocationAfterClimb; }
+
+	UFUNCTION(BlueprintPure, Category = "Climbing")
+	FRotator GetRotationAfterClimbing() const { return RotationAfterClimb; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 	// How far in front of us can we detect climbable ledges/walls?
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
-	float ClimbProximity = 100;
+	float ClimbProximity = 120;
 
 	// Radius of climbing detection sphere when facing forward (i.e. how high up can we detect ledges?)
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")

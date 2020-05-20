@@ -11,6 +11,8 @@ enum class EPuzzleElementType : uint8
 {
 	NOSwitch UMETA(DisplayName = "Normally Open Switch"),
 	Toggle UMETA(DisplayName = "Toggle Switch"),
+	NOSwitch_Rotator UMETA(DisplayName = "NOp-Switch Rotator"),
+	Toggle_Rotator UMETA(DisplayName = "Toggle Rotator"),
 	Type_None UMETA(DisplayName = "Null type")
 };
 
