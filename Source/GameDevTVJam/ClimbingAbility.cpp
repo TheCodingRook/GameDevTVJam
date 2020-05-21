@@ -73,7 +73,7 @@ void UClimbingAbility::Climb()
 
 		//UE_LOG(LogTemp, Warning, TEXT("Rotation of actor was: %s"), *OwnerCharacter->GetActorForwardVector().ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("Detected ledge at: %s!"), *WallHitResult.Location.ToString())
-		//DrawDebugSphere(GetWorld(), WallLocation, 20.f, 16, FColor::Blue, false, 1, 5.f);
+		DrawDebugSphere(GetWorld(), WallLocation, 20.f, 16, FColor::Blue, false, 1, 5.f);
 
 		//* Now detect the flat horizontal surface (i.e. top) of detected wall */
 
@@ -95,8 +95,8 @@ void UClimbingAbility::Climb()
 		
 
 		FVector FlatFaceTraceStart = FlatSurfaceTraceEnd + (OwnerCharacter->GetActorUpVector() * VerticalOffset);
-		//DrawDebugLine(GetWorld(), FlatFaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 10.f);
-		//DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::White, false, 1, 5.f);
+		DrawDebugLine(GetWorld(), FlatFaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 10.f);
+		DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::White, false, 1, 5.f);
 
 		FCollisionQueryParams FlatSurfaceClimbQueryParams;
 		FlatSurfaceClimbQueryParams.AddIgnoredActor(OwnerCharacter);
@@ -126,7 +126,7 @@ void UClimbingAbility::Climb()
 			LedgeLocation.Y = WallHitResult.Location.Y;
 			LedgeLocation.Z = FlatSurfaceHitResult.Location.Z - ClimbDetectRadius;
 
-			//DrawDebugSphere(GetWorld(), LedgeLocation, 20.f, 16, FColor::Orange, false, 1, 5.f);
+			DrawDebugSphere(GetWorld(), LedgeLocation, 20.f, 16, FColor::Orange, false, 1, 5.f);
 
 
 			// Calculate distance (Z-axis only?) between climb-able ledge and "ClimbSocket" 
@@ -140,6 +140,10 @@ void UClimbingAbility::Climb()
 
 			// Probably need to check if we can reach the ledge when wall and flat surface on top were detected
 
+			/////////////////////////////////////////////////////////
+			// ACTION OF CLIMBING HERE
+			//
+			
 			// Prevent capsule from droppping to the ground due to gravity
 			OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
@@ -152,6 +156,9 @@ void UClimbingAbility::Climb()
 			OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
 			OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
 			
+			//
+			////////////////////////////////////////////////////////////
+
 			// Set the member field of character accordingly
 			OwnerCharacter->SetIsClimbing(true);
 		}
