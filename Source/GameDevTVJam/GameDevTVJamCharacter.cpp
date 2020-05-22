@@ -61,6 +61,11 @@ void AGameDevTVJamCharacter::SetCanClimb(bool NewClimbSetting)
 	bCanClimb = NewClimbSetting;
 }
 
+void AGameDevTVJamCharacter::SetIsHanging(bool NewHangingState)
+{
+	bIsHanging = NewHangingState;
+}
+
 void AGameDevTVJamCharacter::SetIsClimbing(bool NewClimbingState)
 {
 	bIsClimbing = NewClimbingState;

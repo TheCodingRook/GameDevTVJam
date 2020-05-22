@@ -27,15 +27,17 @@ void UClimbingAbility::Climb()
 	OwnerCharacter = Cast<AGameDevTVJamCharacter>(GetOwner());
 
 	FHitResult WallHitResult;
-	FVector WallTraceStart = FVector(OwnerCharacter->ActorToWorld().GetLocation() + FVector(0.f, 0.f, 30.f)); // minor adjustment to start higher than the center of player
+	FVector WallTraceStart = FVector(OwnerCharacter->ActorToWorld().GetLocation());
 
 	FVector WallTraceEnd = WallTraceStart + (OwnerCharacter->GetActorForwardVector() * ClimbProximity);
 
 	FCollisionQueryParams WallClimbQueryParams;
 	WallClimbQueryParams.AddIgnoredActor(OwnerCharacter);
 
-	DrawDebugLine(GetWorld(), WallTraceStart, WallTraceEnd, FColor::Red, false , 1.f,(uint8)'\000', 10.f);
-	DrawDebugSphere(GetWorld(), WallTraceEnd, ClimbDetectRadius, 16, FColor::Green, false, 1, 5.f);
+	DrawDebugLine(GetWorld(), WallTraceStart, WallTraceEnd, FColor::Red, false , 1.f,(uint8)'\000', 5.f);
+
+	FVector WallLocation;
+	FVector WallNormal = WallHitResult.Normal;
 
 	bool FoundVerticalWall = GetWorld()->SweepSingleByChannel(
 		WallHitResult,
@@ -49,9 +51,8 @@ void UClimbingAbility::Climb()
 
 	if (FoundVerticalWall)
 	{
-		FVector WallLocation;
-		FVector WallNormal = WallHitResult.Normal;
-		//UE_LOG(LogTemp, Warning, TEXT("Wall Normal was: %s"), *WallNormal.ToString())
+
+		UE_LOG(LogTemp, Warning, TEXT("Wall Normal was: %s"), *WallNormal.ToString())
 
 		//Get a reference to the actor that owns the hitresult
 		WallActor = WallHitResult.GetComponent()->GetOwner();
@@ -69,50 +70,134 @@ void UClimbingAbility::Climb()
 		{
 			WallLocation.Y = WallHitResult.Location.Y + ClimbDetectRadius;
 		}
-		
 
-		//UE_LOG(LogTemp, Warning, TEXT("Rotation of actor was: %s"), *OwnerCharacter->GetActorForwardVector().ToString());
+
+		UE_LOG(LogTemp, Warning, TEXT("Rotation of actor was: %s"), *OwnerCharacter->GetActorForwardVector().ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("Detected ledge at: %s!"), *WallHitResult.Location.ToString())
-		DrawDebugSphere(GetWorld(), WallLocation, 20.f, 16, FColor::Blue, false, 1, 5.f);
+		DrawDebugSphere(GetWorld(), WallLocation, ClimbDetectRadius / 2, 16, FColor::Green, false, 1, 5.f);
+	}
+	else
+	{
+		DrawDebugSphere(GetWorld(), WallTraceEnd, ClimbDetectRadius, 16, FColor::Green, false, 1, 5.f);
+	}
 
-		//* Now detect the flat horizontal surface (i.e. top) of detected wall */
+	// SECOND HORIZONTAL TRACER TO DETECT WALL GAPS ABOVE
 
-		FHitResult FlatSurfaceHitResult;
-		
-		FVector FlatSurfaceTraceEnd;
-			FlatSurfaceTraceEnd.X = OwnerCharacter->ActorToWorld().GetLocation().X,
-			FlatSurfaceTraceEnd.Z = OwnerCharacter->ActorToWorld().GetLocation().Z;
-		
-			// For the Ledge traceline, we want to go just a bit farther out to detect flat surface, but check which direction we are facing
-			if (OwnerCharacter->GetActorForwardVector().Y < 0)
-			{
-				FlatSurfaceTraceEnd.Y = WallLocation.Y - 50.f;
-			}
-			else
-			{
-				FlatSurfaceTraceEnd.Y = WallLocation.Y + 50.f;
-			}
-		
+	FHitResult GapHitResult;
+	FVector GapTraceStart = FVector(OwnerCharacter->ActorToWorld().GetLocation() + FVector(0.f, 0.f, VerticalOffset)); // Adjustment to start higher than the center of player
+	FVector GapTraceEnd = GapTraceStart + (OwnerCharacter->GetActorForwardVector() * (ClimbDetectRadius + GapTracerOffset));
 
-		FVector FlatFaceTraceStart = FlatSurfaceTraceEnd + (OwnerCharacter->GetActorUpVector() * VerticalOffset);
-		DrawDebugLine(GetWorld(), FlatFaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 10.f);
-		DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::White, false, 1, 5.f);
+	FCollisionQueryParams GapQueryParams;
+	GapQueryParams.AddIgnoredActor(OwnerCharacter);
 
-		FCollisionQueryParams FlatSurfaceClimbQueryParams;
-		FlatSurfaceClimbQueryParams.AddIgnoredActor(OwnerCharacter);
+	DrawDebugLine(GetWorld(), GapTraceStart, GapTraceEnd, FColor::Cyan, false, 1.f, (uint8)'\000', 5.f);
 
-		bool FoundFlatSurface = GetWorld()->SweepSingleByChannel(
-			FlatSurfaceHitResult,
-			FlatFaceTraceStart,
-			FlatSurfaceTraceEnd,
-			FQuat::Identity,
-			ECC_GameTraceChannel1,
-			FCollisionShape::MakeSphere(ClimbDetectRadius),
-			FlatSurfaceClimbQueryParams
-		);
+	bool NoGapFound = GetWorld()->SweepSingleByChannel(
+		GapHitResult,
+		GapTraceStart,
+		GapTraceEnd,
+		FQuat::Identity,
+		ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(ClimbDetectRadius),
+		GapQueryParams
+	);
 
-		if (FoundFlatSurface)
+	if (NoGapFound)
+	{
+		FVector NoGapLocation;
+
+		NoGapLocation.X = GapHitResult.Location.X;
+		NoGapLocation.Z = GapHitResult.Location.Z;
+
+		// The Y coordinate is a special case: depending on whether we are facing left or right
+		if (OwnerCharacter->GetActorForwardVector().Y < 0)
 		{
+			NoGapLocation.Y = GapHitResult.Location.Y - ClimbDetectRadius;
+		}
+		else
+		{
+			NoGapLocation.Y = GapHitResult.Location.Y + ClimbDetectRadius;
+		}
+		DrawDebugSphere(GetWorld(), NoGapLocation, ClimbDetectRadius / 2, 16, FColor::Black, false, 1, 5.f);
+	}
+	else
+	{
+		DrawDebugSphere(GetWorld(), GapTraceEnd, ClimbDetectRadius, 16, FColor::Black, false, 1, 5.f);
+	}
+
+	//* Now detect the flat horizontal surface (i.e. top) of detected wall */
+
+	FHitResult FlatSurfaceHitResult;
+	FVector FlatSurfaceTraceStart = GapTraceEnd;
+	FVector FlatSurfaceTraceEnd = FlatSurfaceTraceStart - (OwnerCharacter->GetActorUpVector() * VerticalOffset);
+
+	DrawDebugLine(GetWorld(), FlatSurfaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 5.f);
+	
+
+	FCollisionQueryParams FlatSurfaceClimbQueryParams;
+	FlatSurfaceClimbQueryParams.AddIgnoredActor(OwnerCharacter);
+
+	FVector LedgeLocation;
+
+	bool FoundFlatSurface = GetWorld()->SweepSingleByChannel(
+		FlatSurfaceHitResult,
+		FlatSurfaceTraceStart,
+		FlatSurfaceTraceEnd,
+		FQuat::Identity,
+		ECC_GameTraceChannel1,
+		FCollisionShape::MakeSphere(ClimbDetectRadius),
+		FlatSurfaceClimbQueryParams
+	);
+
+	if (FoundFlatSurface)
+	{
+		LedgeLocation.X = WallLocation.X; // either of wall or flat surface would probably be fine here
+		LedgeLocation.Y = WallLocation.Y;
+		LedgeLocation.Z = FlatSurfaceHitResult.Location.Z - ClimbDetectRadius;
+
+		DrawDebugSphere(GetWorld(), LedgeLocation, ClimbDetectRadius / 2, 16, FColor::Magenta, false, 1, 5.f);
+	}
+
+	else
+	{
+		DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::Magenta, false, 1, 5.f);
+	}
+
+
+	if (FoundVerticalWall && !NoGapFound)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can climb!"));
+		OwnerCharacter->SetIsHanging(true);
+
+		// Prevent capsule from droppping to the ground due to gravity
+		OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
+		
+
+		RotationAfterClimb = FRotator(0, 90*FMath::RoundToInt(OwnerCharacter->GetActorForwardVector().Y), 0);
+		float DistanceFromLedge =
+			LedgeLocation.Z -
+			OwnerCharacter->GetMesh()->GetSocketByName(FName("HipsSocket"))->GetSocketLocation(OwnerCharacter->GetMesh()).Z;
+
+		OwnerCharacter->GetCapsuleComponent()->MoveComponent(
+			FVector(OwnerCharacter->GetActorLocation().X - WallLocation.X,
+			WallLocation.Y - OwnerCharacter->GetActorLocation().Y - 50.f * FMath::RoundToInt(OwnerCharacter->GetActorForwardVector().Y),
+			DistanceFromLedge),
+			RotationAfterClimb,
+			false
+		);
+		OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
+		//OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
+
+	}
+
+
+	//////////////
+	//// OLD IMPLEMENTATION BELOW
+
+	if (FoundVerticalWall)
+	{
+		//if (FoundFlatSurface)
+		/*{
 
 			// Store the location of the hit result: this is where the player gets teleported at the end
 			LocationAfterClimb = FlatSurfaceHitResult.Location;
@@ -148,11 +233,11 @@ void UClimbingAbility::Climb()
 			OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
 
 			RotationAfterClimb = FRotator(0, -90 * FMath::RoundToInt(WallNormal.Y), 0);
-			OwnerCharacter->GetCapsuleComponent()->MoveComponent(
-				FVector(OwnerCharacter->GetActorLocation().X - WallLocation.X, WallLocation.Y - OwnerCharacter->GetActorLocation().Y + 50.f * FMath::RoundToInt(WallNormal.Y), DistanceFromLedge),
-				RotationAfterClimb,
-				false
-			);
+			//OwnerCharacter->GetCapsuleComponent()->MoveComponent(
+				//FVector(OwnerCharacter->GetActorLocation().X - WallLocation.X, WallLocation.Y - OwnerCharacter->GetActorLocation().Y + 50.f * FMath::RoundToInt(WallNormal.Y), DistanceFromLedge),
+				//RotationAfterClimb,
+				//false
+			//);
 			OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
 			OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
 			
@@ -162,11 +247,8 @@ void UClimbingAbility::Climb()
 			// Set the member field of character accordingly
 			OwnerCharacter->SetIsClimbing(true);
 		}
-
+*/
 	}
-
-	
-
 }
 
 void UClimbingAbility::FinishClimbing()
@@ -180,9 +262,10 @@ void UClimbingAbility::FinishClimbing()
 		//LocationAfterClimb - OwnerCharacter->GetCapsuleComponent()->GetComponentLocation() + FVector(0.f, 0.f, OwnerCharacter->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()),
 		//RotationAfterClimb,
 		//false
-	//);
+//	);
 	
 	OwnerCharacter->SetActorLocation(LocationAfterClimb + FVector(0.f, 0.f, OwnerCharacter->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()));
+	
 
 }
 
@@ -213,13 +296,13 @@ void UClimbingAbility::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		//UE_LOG(LogTemp, Warning, TEXT("Delta Z is: %f"), DeltaZ)
 
 		// Update the character capsule's location with the location of the WallActor
-		OwnerCharacter->GetCapsuleComponent()->MoveComponent(
-			FVector(0,
-			DeltaY,
-			DeltaZ),			
-			RotationAfterClimb,
-			false
-		);
+		//OwnerCharacter->GetCapsuleComponent()->MoveComponent(
+			//FVector(0,
+			//DeltaY,
+			//DeltaZ),			
+			//RotationAfterClimb,
+			//false
+		//);
 
 		//Update the LocationAfterClimb 
 		LocationAfterClimb = LocationAfterClimb + FVector(0.f, DeltaY, DeltaZ);

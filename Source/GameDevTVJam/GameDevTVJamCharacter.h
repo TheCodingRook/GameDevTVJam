@@ -94,7 +94,15 @@ public:
 
 	// Sets the climbing ability
 	UFUNCTION(BlueprintCallable)
-		void SetCanClimb(bool NewClimbSetting);
+	void SetCanClimb(bool NewClimbSetting);
+
+	// Returns whether character is hanging
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	bool IsHanging() const { return bIsHanging; }
+
+	// Sets the hanging boolean
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	void SetIsHanging(bool NewHangingState);
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -110,6 +118,10 @@ public:
 
 
 protected:
+	// Bool to let the animation blueprint know character is hanging
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+		bool bIsHanging;
+
 	// Bool to let the animation blueprint know character is climbing
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
 	bool bIsClimbing;

@@ -48,7 +48,13 @@ protected:
 
 	// Vertical offset for secondary trace to detect ledge height
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Settings")
-	float VerticalOffset = 110; 
+	float VerticalOffset = 145; 
+
+	// How much farther do we trace to detect gaps above the wall?
+	// This loosely correlates to the capsule's radius, i.e. we want to be 
+	// able to fit the character on the ledge he is climbing up to
+	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
+		float GapTracerOffset = 85;
 
 private:
 	// Private member to store the pointer to the player character
