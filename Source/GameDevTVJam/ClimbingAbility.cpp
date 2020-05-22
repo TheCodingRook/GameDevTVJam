@@ -166,8 +166,7 @@ void UClimbingAbility::Climb()
 
 	if (FoundVerticalWall && !NoGapFound)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Can climb!"));
-		OwnerCharacter->SetIsHanging(true);
+		
 
 		// Prevent capsule from droppping to the ground due to gravity
 		OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
@@ -187,7 +186,7 @@ void UClimbingAbility::Climb()
 		);
 		OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
 		//OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
-
+		OwnerCharacter->SetIsClimbing(true);
 	}
 
 
@@ -264,7 +263,7 @@ void UClimbingAbility::FinishClimbing()
 		//false
 //	);
 	
-	OwnerCharacter->SetActorLocation(LocationAfterClimb + FVector(0.f, 0.f, OwnerCharacter->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()));
+	//OwnerCharacter->SetActorLocation(LocationAfterClimb + FVector(0.f, 0.f, OwnerCharacter->GetCapsuleComponent()->GetUnscaledCapsuleHalfHeight()));
 	
 
 }
