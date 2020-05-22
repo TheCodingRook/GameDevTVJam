@@ -11,36 +11,36 @@ class AGameDevTVJamCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-	/** Side view camera */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* SideViewCameraComponent;
+		/** Side view camera */
+		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+		class UCameraComponent* SideViewCameraComponent;
 
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		class USpringArmComponent* CameraBoom;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void AddKeyToInventory(AActor* KeyToAdd);
+		void AddKeyToInventory(AActor* KeyToAdd);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveKeyFromInventory(AActor* KeyToRemove);
+		void RemoveKeyFromInventory(AActor* KeyToRemove);
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
-	TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
+		TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
 
 protected:
 
 	class UGrabbingAbility* Grabber;
 
-	UPROPERTY(VisibleAnywhere, Category = "Climbing Ability")
-	class UClimbingAbility* ClimbingAbility;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+		class UClimbingAbility* ClimbingAbility;
 
 	/** A simple array to hold keys the player collects */
 	TArray<AActor*> InventoryKeyList;
 
 	/** Custom call for jump */
 	void AttemptJump();
-	
+
 	/** Called for side to side input */
 	void MoveRight(float Val);
 
@@ -73,11 +73,11 @@ protected:
 	void StopInteracting();
 
 	/** Called for climbing */
-	void Climb ();
+	void Climb();
 
 	/** Called by the Animation Blueprint to finalize the climbing process */
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-	void FinishClimbing();
+		void FinishClimbing();
 
 public:
 	AGameDevTVJamCharacter();
@@ -89,14 +89,14 @@ public:
 
 	// Returns encumbered state
 	UFUNCTION(BlueprintPure)
-	bool IsEncumbered() const { return bIsEncumbered; }
+		bool IsEncumbered() const { return bIsEncumbered; }
 
 	// Sets the encumbered state of the character
 	void SetEncumbered(bool NewState);
 
 	// Sets the climbing ability
 	UFUNCTION(BlueprintCallable)
-	void SetCanClimb(bool NewClimbSetting);
+		void SetCanClimb(bool NewClimbSetting);
 
 	// Returns whether character is hanging
 	//UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -108,25 +108,36 @@ public:
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-	bool IsClimbing() const { return bIsClimbing; }
+		bool IsClimbing() const { return bIsClimbing; }
 
 	// Sets the climbing boolean
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-	void SetIsClimbing(bool NewClimbingState);
+		void SetIsClimbing(bool NewClimbingState);
 
 	// Returns whether character is climbing on top of ledge
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-	bool IsClimbingLedge() const { return bIsClimbingLedge; }
+		bool IsClimbingLedge() const { return bIsClimbingLedge; }
 
 	// Sets the climbingLedge boolean
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-	void SetIsClimbingLedge(bool NewClimbingLedgeState);
+		void SetIsClimbingLedge(bool NewClimbingLedgeState);
 
 
 	// Gets Climbing Ability component
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-	UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
+		UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
 
+	UFUNCTION(BlueprintPure, Category = "ClimbingAbility")
+		bool WasMeshAdjusted() const { return bWasMeshAdjusted; }
+
+	UFUNCTION(BlueprintCallable, Category = "ClimbingAbility")
+	void SetWasMeshAdjusted(bool NewMeshAdjustedFlag);
+
+	UFUNCTION(BlueprintPure, Category = "Character")
+	bool IsDead() const { return bIsDead; }
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetIsDead(bool DeathStatus);
 
 protected:
 	// Bool to let the animation blueprint know character is hanging
@@ -142,12 +153,22 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
 		bool bIsClimbingLedge;
 
+	// Bool to keep track if Mesh needs re-adjusting if death occurs in the midst of climbing 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+	bool bWasMeshAdjusted;
+
+	// Bool to keep track if player is alive
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character")
+		bool bIsDead;
+
+	// Bool to store the player's current climbing ability status (enabled or disabled)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!
+	bool bCanClimb;
+
 private:
 	// Bool to store the player's current carrying status
 	bool bIsEncumbered;
 
-	// Bool to store the player's current climbing ability status (enabled or disabled)
-	UPROPERTY(EditAnywhere, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!
-	bool bCanClimb;
+
 
 };

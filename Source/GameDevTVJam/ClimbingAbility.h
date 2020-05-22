@@ -70,7 +70,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
 	float CapsuleRadiusOverride = 30.f;
 
-	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Configuration")
 	FVector ManualMeshOffset {0.f, 0.f, -60.f};
 
 private:

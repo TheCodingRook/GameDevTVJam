@@ -81,6 +81,16 @@ void AGameDevTVJamCharacter::SetIsClimbingLedge(bool NewClimbingLedgeState)
 	
 }
 
+void AGameDevTVJamCharacter::SetWasMeshAdjusted(bool NewMeshAdjustedFlag)
+{
+	bWasMeshAdjusted = NewMeshAdjustedFlag;
+}
+
+void AGameDevTVJamCharacter::SetIsDead(bool DeathStatus)
+{
+	bIsDead = DeathStatus;
+}
+
 void AGameDevTVJamCharacter::SetEncumbered(bool NewState)
 {
 	bIsEncumbered = NewState;
@@ -99,7 +109,7 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
-	PlayerInputComponent->BindAction("Climb", IE_Pressed, this, &AGameDevTVJamCharacter::Climb);
+	//PlayerInputComponent->BindAction("Climb", IE_Pressed, this, &AGameDevTVJamCharacter::Climb);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AGameDevTVJamCharacter::Interact);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AGameDevTVJamCharacter::StopInteracting);
 
@@ -122,7 +132,6 @@ void AGameDevTVJamCharacter::AttemptJump()
 
 	if (bIsClimbing)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Move up the ledge!"))
 		bIsClimbing = false;
 		bIsClimbingLedge = true;
 	}
@@ -146,7 +155,8 @@ void AGameDevTVJamCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, c
 	// jump on any touch
 	if (bIsClimbing)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Move up the ledge!"))
+		bIsClimbing = false;
+		bIsClimbingLedge = true;
 	}
 	else if (!bIsEncumbered)
 	{

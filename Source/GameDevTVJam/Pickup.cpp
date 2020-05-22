@@ -50,7 +50,7 @@ void APickup::WasCollected_Implementation()
 {
 	// Log a debug message
 	FString PickupDebugString = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("You have collected %s"), *PickupDebugString)
+	//UE_LOG(LogTemp, Warning, TEXT("You have collected %s"), *PickupDebugString)
 
 		// Deactive this pickup, though may be unnecessary if I destroy immediately afterwards
 		bIsActive = false;
