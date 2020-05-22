@@ -51,9 +51,6 @@ void UClimbingAbility::Climb()
 
 	if (FoundVerticalWall)
 	{
-
-		UE_LOG(LogTemp, Warning, TEXT("Wall Normal was: %s"), *WallNormal.ToString())
-
 		//Get a reference to the actor that owns the hitresult
 		WallActor = WallHitResult.GetComponent()->GetOwner();
 		WallActorMostRecentLocation = WallActor->GetActorLocation();
@@ -177,13 +174,22 @@ void UClimbingAbility::Climb()
 			LedgeLocation.Z -
 			OwnerCharacter->GetMesh()->GetSocketByName(FName("HipsSocket"))->GetSocketLocation(OwnerCharacter->GetMesh()).Z;
 
+
+		OwnerCharacter->GetMesh()->AddLocalOffset(ManualMeshOffset);
 		OwnerCharacter->GetCapsuleComponent()->MoveComponent(
 			FVector(OwnerCharacter->GetActorLocation().X - WallLocation.X,
-			WallLocation.Y - OwnerCharacter->GetActorLocation().Y - 50.f * FMath::RoundToInt(OwnerCharacter->GetActorForwardVector().Y),
-			DistanceFromLedge),
+			WallLocation.Y - OwnerCharacter->GetActorLocation().Y - OwnerCharacter->GetCapsuleComponent()->GetUnscaledCapsuleRadius() * FMath::RoundToInt(OwnerCharacter->GetActorForwardVector().Y),
+			DistanceFromLedge + ManualZOffsetOverride),
 			RotationAfterClimb,
 			false
 		);
+
+		// Reduce the capsule size and radius, after saving original values
+		OriginalCapsuleHalfHeight = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		OwnerCharacter->GetCapsuleComponent()->SetCapsuleHalfHeight(CapsuleHalfHeightOverride);
+		OriginalCapsuleRadius = OwnerCharacter->GetCapsuleComponent()->GetScaledCapsuleRadius();
+		OwnerCharacter->GetCapsuleComponent()->SetCapsuleRadius(CapsuleRadiusOverride);
+
 		OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
 		//OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
 		OwnerCharacter->SetIsClimbing(true);
@@ -250,11 +256,23 @@ void UClimbingAbility::Climb()
 	}
 }
 
+void UClimbingAbility::ClimbLedge()
+{
+	
+}
+
 void UClimbingAbility::FinishClimbing()
 {
-	OwnerCharacter->SetIsClimbing(false);
 	OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
-	OwnerCharacter->EnableInput(GetWorld()->GetFirstPlayerController());
+
+	// Restore capsule original size
+
+	OwnerCharacter->GetCapsuleComponent()->SetCapsuleHalfHeight(OriginalCapsuleHalfHeight);
+	OwnerCharacter->GetCapsuleComponent()->SetCapsuleRadius(OriginalCapsuleRadius);
+	OwnerCharacter->GetMesh()->AddLocalOffset(-ManualMeshOffset);
+
+	OwnerCharacter->SetIsClimbingLedge(false);
+	//OwnerCharacter->EnableInput(GetWorld()->GetFirstPlayerController());
 	//OwnerCharacter->GetMesh()->DetachFromParent();
 
 	//OwnerCharacter->GetCapsuleComponent()->MoveComponent(
@@ -285,7 +303,7 @@ void UClimbingAbility::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	
 	OwnerCharacter = Cast<AGameDevTVJamCharacter>(GetOwner());
 	
-	if (OwnerCharacter->IsClimbing())
+	if (OwnerCharacter->IsClimbing() || OwnerCharacter->IsClimbingLedge())
 	{
 		
 		float DeltaY = WallActor->GetActorLocation().Y - WallActorMostRecentLocation.Y;
@@ -295,13 +313,13 @@ void UClimbingAbility::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 		//UE_LOG(LogTemp, Warning, TEXT("Delta Z is: %f"), DeltaZ)
 
 		// Update the character capsule's location with the location of the WallActor
-		//OwnerCharacter->GetCapsuleComponent()->MoveComponent(
-			//FVector(0,
-			//DeltaY,
-			//DeltaZ),			
-			//RotationAfterClimb,
-			//false
-		//);
+		OwnerCharacter->GetCapsuleComponent()->MoveComponent(
+			FVector(0,
+			DeltaY,
+			DeltaZ),			
+			RotationAfterClimb,
+			false
+		);
 
 		//Update the LocationAfterClimb 
 		LocationAfterClimb = LocationAfterClimb + FVector(0.f, DeltaY, DeltaZ);

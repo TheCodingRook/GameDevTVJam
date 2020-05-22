@@ -61,14 +61,24 @@ void AGameDevTVJamCharacter::SetCanClimb(bool NewClimbSetting)
 	bCanClimb = NewClimbSetting;
 }
 
-void AGameDevTVJamCharacter::SetIsHanging(bool NewHangingState)
-{
-	bIsHanging = NewHangingState;
-}
+//void AGameDevTVJamCharacter::SetIsHanging(bool NewHangingState)
+//{
+	//bIsHanging = NewHangingState;
+//}
 
 void AGameDevTVJamCharacter::SetIsClimbing(bool NewClimbingState)
 {
 	bIsClimbing = NewClimbingState;
+}
+
+void AGameDevTVJamCharacter::SetIsClimbingLedge(bool NewClimbingLedgeState)
+{
+	if (NewClimbingLedgeState)
+	{
+		bIsClimbing = false;
+	}
+	bIsClimbingLedge = NewClimbingLedgeState;
+	
 }
 
 void AGameDevTVJamCharacter::SetEncumbered(bool NewState)
@@ -109,7 +119,14 @@ void AGameDevTVJamCharacter::RemoveKeyFromInventory(AActor* KeyToRemove)
 
 void AGameDevTVJamCharacter::AttemptJump()
 {
-	if (!bIsEncumbered && !bIsClimbing)
+
+	if (bIsClimbing)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Move up the ledge!"))
+		bIsClimbing = false;
+		bIsClimbingLedge = true;
+	}
+	else if (!bIsEncumbered)
 	{
 		Jump();
 	}
@@ -117,14 +134,21 @@ void AGameDevTVJamCharacter::AttemptJump()
 
 void AGameDevTVJamCharacter::MoveRight(float Value)
 {
-	// add movement in that direction
-	AddMovementInput(FVector(0.f,-1.f,0.f), Value);
+	if (!bIsClimbing)
+	{
+		// add movement in that direction
+		AddMovementInput(FVector(0.f, -1.f, 0.f), Value);
+	}
 }
 
 void AGameDevTVJamCharacter::TouchStarted(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	// jump on any touch
-	if (!bIsEncumbered && !bIsClimbing)
+	if (bIsClimbing)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Move up the ledge!"))
+	}
+	else if (!bIsEncumbered)
 	{
 		Jump();
 	}
@@ -137,7 +161,10 @@ void AGameDevTVJamCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, c
 
 void AGameDevTVJamCharacter::Grab()
 {
-	Grabber->Grab();
+	if (!bIsClimbing)
+	{
+		Grabber->Grab();
+	}
 }
 
 void AGameDevTVJamCharacter::Drop()
@@ -147,7 +174,7 @@ void AGameDevTVJamCharacter::Drop()
 
 void AGameDevTVJamCharacter::PerformCrouch()
 {
-	if (!bIsEncumbered && !GetMovementComponent()->IsFalling())
+	if (!bIsEncumbered && !GetMovementComponent()->IsFalling() && !bIsClimbing)
 	{
 		// Use ACharacter's interface
 		Crouch();
@@ -162,9 +189,12 @@ void AGameDevTVJamCharacter::PerformUnCrouch()
 
 void AGameDevTVJamCharacter::Interact()
 {
-	if (UInteractionComponentBase* InteractionToExecute = Cast<UMyGameInstance>(GetGameInstance())->GetLatestInteractionCommand())
+	if (!bIsClimbing)
 	{
-		InteractionToExecute->ExecuteInteraction(this);
+		if (UInteractionComponentBase* InteractionToExecute = Cast<UMyGameInstance>(GetGameInstance())->GetLatestInteractionCommand())
+		{
+			InteractionToExecute->ExecuteInteraction(this);
+		}
 	}
 }
 

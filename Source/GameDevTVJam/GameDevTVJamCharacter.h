@@ -31,6 +31,8 @@ class AGameDevTVJamCharacter : public ACharacter
 protected:
 
 	class UGrabbingAbility* Grabber;
+
+	UPROPERTY(VisibleAnywhere, Category = "Climbing Ability")
 	class UClimbingAbility* ClimbingAbility;
 
 	/** A simple array to hold keys the player collects */
@@ -97,12 +99,12 @@ public:
 	void SetCanClimb(bool NewClimbSetting);
 
 	// Returns whether character is hanging
-	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-	bool IsHanging() const { return bIsHanging; }
+	//UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	//bool IsHanging() const { return bIsHanging; }
 
 	// Sets the hanging boolean
-	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-	void SetIsHanging(bool NewHangingState);
+	//UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	//void SetIsHanging(bool NewHangingState);
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -112,6 +114,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
 	void SetIsClimbing(bool NewClimbingState);
 
+	// Returns whether character is climbing on top of ledge
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	bool IsClimbingLedge() const { return bIsClimbingLedge; }
+
+	// Sets the climbingLedge boolean
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	void SetIsClimbingLedge(bool NewClimbingLedgeState);
+
+
 	// Gets Climbing Ability component
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
 	UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
@@ -119,12 +130,17 @@ public:
 
 protected:
 	// Bool to let the animation blueprint know character is hanging
+	// WEIRD BUG! DON'T REMOVE THIS BOOL, THE ANIMATION STOPS WORKING IF YOU DO!
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
-		bool bIsHanging;
+	bool bIsHanging;
 
 	// Bool to let the animation blueprint know character is climbing
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
 	bool bIsClimbing;
+
+	// Bool to let the animation blueprint know character is hanging
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+		bool bIsClimbingLedge;
 
 private:
 	// Bool to store the player's current carrying status

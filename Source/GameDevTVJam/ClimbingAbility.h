@@ -26,6 +26,9 @@ public:
 	void Climb();
 
 	UFUNCTION(BlueprintCallable, Category = "Climbing")
+	void ClimbLedge();
+
+	UFUNCTION(BlueprintCallable, Category = "Climbing")
 	void FinishClimbing();
 
 	UFUNCTION(BlueprintPure, Category = "Climbing")
@@ -47,14 +50,28 @@ protected:
 	float ClimbDetectRadius = 20.f;
 
 	// Vertical offset for secondary trace to detect ledge height
-	UPROPERTY(EditDefaultsOnly, Category = "Climbing Settings")
+	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
 	float VerticalOffset = 145; 
 
 	// How much farther do we trace to detect gaps above the wall?
 	// This loosely correlates to the capsule's radius, i.e. we want to be 
 	// able to fit the character on the ledge he is climbing up to
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
-		float GapTracerOffset = 85;
+	float GapTracerOffset = 85;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
+	float ManualZOffsetOverride;
+
+	// Manual override of character capsule's halfheight to enable the capsule to follow character during climb
+	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
+	float CapsuleHalfHeightOverride = 45.f;
+
+	// Manual override of character capsule's radius to enable the capsule to follow character during climb
+	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
+	float CapsuleRadiusOverride = 30.f;
+
+	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
+	FVector ManualMeshOffset {0.f, 0.f, -60.f};
 
 private:
 	// Private member to store the pointer to the player character
@@ -71,4 +88,10 @@ private:
 
 	//Store most recent location of WallActor (used during ticking to keep track of moving walls/ledges)
 	FVector WallActorMostRecentLocation;
+
+	// Store character capsule's original halfheight value before amending it for climb
+	float OriginalCapsuleHalfHeight;
+
+	// Store character capsule's original radius value before amending it for climb
+	float OriginalCapsuleRadius;
 };
