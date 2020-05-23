@@ -81,6 +81,11 @@ void AGameDevTVJamCharacter::SetIsClimbingLedge(bool NewClimbingLedgeState)
 	
 }
 
+void AGameDevTVJamCharacter::SetIsDroppingFromLedge(bool NewDroppingFromLedgeState)
+{
+	bIsDroppingFromLedge = NewDroppingFromLedgeState;
+}
+
 void AGameDevTVJamCharacter::SetWasMeshAdjusted(bool NewMeshAdjustedFlag)
 {
 	bWasMeshAdjusted = NewMeshAdjustedFlag;
@@ -184,10 +189,19 @@ void AGameDevTVJamCharacter::Drop()
 
 void AGameDevTVJamCharacter::PerformCrouch()
 {
-	if (!bIsEncumbered && !GetMovementComponent()->IsFalling() && !bIsClimbing)
+	if (!bIsEncumbered && !GetMovementComponent()->IsFalling())
 	{
-		// Use ACharacter's interface
-		Crouch();
+		if (bIsClimbing)
+		{
+			// Let the player fall from the hanging position
+			bIsDroppingFromLedge = true;
+			ClimbingAbility->FinishClimbing();
+		}
+		else
+		{
+			// Use ACharacter's interface
+			Crouch();
+		}
 	}
 }
 

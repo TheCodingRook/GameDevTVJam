@@ -89,14 +89,14 @@ public:
 
 	// Returns encumbered state
 	UFUNCTION(BlueprintPure)
-		bool IsEncumbered() const { return bIsEncumbered; }
+	bool IsEncumbered() const { return bIsEncumbered; }
 
 	// Sets the encumbered state of the character
 	void SetEncumbered(bool NewState);
 
 	// Sets the climbing ability
 	UFUNCTION(BlueprintCallable)
-		void SetCanClimb(bool NewClimbSetting);
+	void SetCanClimb(bool NewClimbSetting);
 
 	// Returns whether character is hanging
 	//UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -108,24 +108,32 @@ public:
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-		bool IsClimbing() const { return bIsClimbing; }
+	bool IsClimbing() const { return bIsClimbing; }
 
 	// Sets the climbing boolean
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-		void SetIsClimbing(bool NewClimbingState);
+	void SetIsClimbing(bool NewClimbingState);
 
 	// Returns whether character is climbing on top of ledge
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-		bool IsClimbingLedge() const { return bIsClimbingLedge; }
+	bool IsClimbingLedge() const { return bIsClimbingLedge; }
 
 	// Sets the climbingLedge boolean
 	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-		void SetIsClimbingLedge(bool NewClimbingLedgeState);
+	void SetIsClimbingLedge(bool NewClimbingLedgeState);
+
+	// Returns whether character is climbing on top of ledge
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	bool IsDroppingFromLedge() const { return bIsDroppingFromLedge; }
+
+	// Sets the climbingLedge boolean
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
+	void SetIsDroppingFromLedge(bool NewDroppingFromLedgeState);
 
 
 	// Gets Climbing Ability component
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-		UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
+	UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
 
 	UFUNCTION(BlueprintPure, Category = "ClimbingAbility")
 		bool WasMeshAdjusted() const { return bWasMeshAdjusted; }
@@ -151,7 +159,11 @@ protected:
 
 	// Bool to let the animation blueprint know character is hanging
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
-		bool bIsClimbingLedge;
+	bool bIsClimbingLedge;
+
+	// Bool to let the animation blueprint know character is dropping from a ledge
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
+	bool bIsDroppingFromLedge;
 
 	// Bool to keep track if Mesh needs re-adjusting if death occurs in the midst of climbing 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
@@ -159,7 +171,7 @@ protected:
 
 	// Bool to keep track if player is alive
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character")
-		bool bIsDead;
+	bool bIsDead;
 
 	// Bool to store the player's current climbing ability status (enabled or disabled)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!

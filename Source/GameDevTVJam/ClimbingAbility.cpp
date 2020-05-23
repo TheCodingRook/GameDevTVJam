@@ -272,8 +272,9 @@ void UClimbingAbility::FinishClimbing()
 	OwnerCharacter->GetCapsuleComponent()->SetCapsuleRadius(OriginalCapsuleRadius);
 	OwnerCharacter->GetMesh()->AddLocalOffset(-ManualMeshOffset);
 	OwnerCharacter->SetWasMeshAdjusted(false);
-
+	OwnerCharacter->SetIsClimbing(false);
 	OwnerCharacter->SetIsClimbingLedge(false);
+	
 	//OwnerCharacter->EnableInput(GetWorld()->GetFirstPlayerController());
 	//OwnerCharacter->GetMesh()->DetachFromParent();
 
