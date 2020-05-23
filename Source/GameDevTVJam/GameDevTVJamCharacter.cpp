@@ -61,11 +61,6 @@ void AGameDevTVJamCharacter::SetCanClimb(bool NewClimbSetting)
 	bCanClimb = NewClimbSetting;
 }
 
-//void AGameDevTVJamCharacter::SetIsHanging(bool NewHangingState)
-//{
-	//bIsHanging = NewHangingState;
-//}
-
 void AGameDevTVJamCharacter::SetIsClimbing(bool NewClimbingState)
 {
 	bIsClimbing = NewClimbingState;
@@ -110,11 +105,8 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AGameDevTVJamCharacter::AttemptJump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AGameDevTVJamCharacter::MoveRight);
-	//PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &ACharacter::Crouch);
-	//PlayerInputComponent->BindAction("Crouch", IE_Released, this, &ACharacter::UnCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AGameDevTVJamCharacter::PerformCrouch);
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
-	//PlayerInputComponent->BindAction("Climb", IE_Pressed, this, &AGameDevTVJamCharacter::Climb);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AGameDevTVJamCharacter::Interact);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AGameDevTVJamCharacter::StopInteracting);
 
@@ -174,19 +166,6 @@ void AGameDevTVJamCharacter::TouchStopped(const ETouchIndex::Type FingerIndex, c
 	StopJumping();
 }
 
-void AGameDevTVJamCharacter::Grab()
-{
-	if (!bIsClimbing)
-	{
-		Grabber->Grab();
-	}
-}
-
-void AGameDevTVJamCharacter::Drop()
-{
-	Grabber->Drop();
-}
-
 void AGameDevTVJamCharacter::PerformCrouch()
 {
 	if (!bIsEncumbered && !GetMovementComponent()->IsFalling())
@@ -228,14 +207,4 @@ void AGameDevTVJamCharacter::StopInteracting()
 	{
 		InteractionToExecute->StopInteraction(this);
 	}
-}
-
-void AGameDevTVJamCharacter::Climb()
-{
-	ClimbingAbility->Climb();
-}
-
-void AGameDevTVJamCharacter::FinishClimbing()
-{
-	ClimbingAbility->FinishClimbing();
 }

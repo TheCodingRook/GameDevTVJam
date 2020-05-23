@@ -11,29 +11,29 @@ class AGameDevTVJamCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-		/** Side view camera */
-		UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* SideViewCameraComponent;
+	/** Side view camera */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	class UCameraComponent* SideViewCameraComponent;
 
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class USpringArmComponent* CameraBoom;
+	class USpringArmComponent* CameraBoom;
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-		void AddKeyToInventory(AActor* KeyToAdd);
+	void AddKeyToInventory(AActor* KeyToAdd);
 
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
-		void RemoveKeyFromInventory(AActor* KeyToRemove);
+	void RemoveKeyFromInventory(AActor* KeyToRemove);
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
-		TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
+	TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
 
 protected:
 
 	class UGrabbingAbility* Grabber;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Climbing Ability")
-		class UClimbingAbility* ClimbingAbility;
+	class UClimbingAbility* ClimbingAbility;
 
 	/** A simple array to hold keys the player collects */
 	TArray<AActor*> InventoryKeyList;
@@ -60,24 +60,11 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 	// End of APawn interface
 
-	/** Called for grabbing */
-	void Grab();
-
-	/** Called for ending grabbing */
-	void Drop();
-
 	/** Called for interacting with an interactable */
 	void Interact();
 
 	/** Called for stopping interaction with an interactable */
 	void StopInteracting();
-
-	/** Called for climbing */
-	void Climb();
-
-	/** Called by the Animation Blueprint to finalize the climbing process */
-	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-		void FinishClimbing();
 
 public:
 	AGameDevTVJamCharacter();
@@ -97,14 +84,6 @@ public:
 	// Sets the climbing ability
 	UFUNCTION(BlueprintCallable)
 	void SetCanClimb(bool NewClimbSetting);
-
-	// Returns whether character is hanging
-	//UFUNCTION(BlueprintPure, Category = "Climbing Ability")
-	//bool IsHanging() const { return bIsHanging; }
-
-	// Sets the hanging boolean
-	//UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
-	//void SetIsHanging(bool NewHangingState);
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -136,7 +115,7 @@ public:
 	UClimbingAbility* GetClimbingAbility() const { return ClimbingAbility; }
 
 	UFUNCTION(BlueprintPure, Category = "ClimbingAbility")
-		bool WasMeshAdjusted() const { return bWasMeshAdjusted; }
+	bool WasMeshAdjusted() const { return bWasMeshAdjusted; }
 
 	UFUNCTION(BlueprintCallable, Category = "ClimbingAbility")
 	void SetWasMeshAdjusted(bool NewMeshAdjustedFlag);
@@ -180,7 +159,4 @@ protected:
 private:
 	// Bool to store the player's current carrying status
 	bool bIsEncumbered;
-
-
-
 };
