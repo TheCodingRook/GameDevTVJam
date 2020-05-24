@@ -12,9 +12,5 @@ AGameDevTVJamGameMode::AGameDevTVJamGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
-}
 
-void AGameDevTVJamGameMode::AddTime(float ExtraTime)
-{
-	CountDown += ExtraTime;
 }

@@ -14,16 +14,5 @@ class AGameDevTVJamGameMode : public AGameModeBase
 public:
 	AGameDevTVJamGameMode();
 
-	UFUNCTION(BlueprintCallable, Category = "Game Time")
-		void AddTime(float ExtraTime);
-
-protected:
-	// How many seconds does player have?
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Time")
-		float CountDown;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Time")
-		float StartingTime;
-
 
 };

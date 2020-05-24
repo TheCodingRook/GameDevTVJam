@@ -28,3 +28,8 @@ UInteractionComponentBase* UMyGameInstance::GetLatestInteractionCommand()
 		return nullptr;
 	}
 }
+
+void UMyGameInstance::AddTime(float ExtraTime)
+{
+	CountDown += ExtraTime;
+}
