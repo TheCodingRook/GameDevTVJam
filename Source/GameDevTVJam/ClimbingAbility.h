@@ -49,7 +49,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
 	float ClimbDetectRadius = 20.f;
 
-	// Vertical offset for secondary trace to detect ledge height
+	// Manual Z offset adjustment for wall tracer (e.g. to avoid climbing really short blocks)
+	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
+	float WallTraceZOffset = 50.f;
+
+	// Vertical offset from Player's center for secondary trace to detect ledge height
+	// It does not get affected by WallTraceZOffset value
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
 	float VerticalOffset = 145; 
 
@@ -59,6 +64,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Climbing Configuration")
 	float GapTracerOffset = 85;
 
+	// Adjust the vertical positioning of capsule when character hangs from ledge
 	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
 	float ManualZOffsetOverride;
 
@@ -70,6 +76,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Climbing Configuration")
 	float CapsuleRadiusOverride = 30.f;
 
+	// Manually adjust the mesh positioning within the capsule to avoid collision with ledge when climbing over
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Configuration")
 	FVector ManualMeshOffset {0.f, 0.f, -60.f};
 
