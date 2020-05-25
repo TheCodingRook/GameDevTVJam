@@ -28,6 +28,22 @@ class AGameDevTVJamCharacter : public ACharacter
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 	TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
 
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetInventoryKeyList(TArray<AActor*> NewList);
+
+	/* Alternative implementation for keys
+	 *
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void AddKeyToInventory_alt() { NumberOfKeys++; }
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void RemoveKeyFromInventory_alt();
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+	int GetNumberOfKeys() const { return NumberOfKeys; }
+
 protected:
 
 	class UGrabbingAbility* Grabber;
@@ -36,7 +52,12 @@ protected:
 	class UClimbingAbility* ClimbingAbility;
 
 	/** A simple array to hold keys the player collects */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
 	TArray<AActor*> InventoryKeyList;
+
+	/** Alternative implementation: an integer to hold the number of keys the player collects */
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Inventory")
+	int NumberOfKeys;
 
 	/** Custom call for jump */
 	void AttemptJump();

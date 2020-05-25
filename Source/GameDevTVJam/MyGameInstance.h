@@ -7,7 +7,8 @@
 #include "MyGameInstance.generated.h"
 
 /**
- * 
+ * Custom GameInstance class to save the state of various assets that needs
+ * to be preserved between savepoints as we travel back and forth to the map
  */
 UCLASS()
 class GAMEDEVTVJAM_API UMyGameInstance : public UGameInstance
@@ -15,6 +16,7 @@ class GAMEDEVTVJAM_API UMyGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
+
 	UFUNCTION(BlueprintCallable, Category = "Interaction Commands")
 	void PushNewInteractionCommand(class UInteractionComponentBase* NewInteraction);
 
@@ -45,37 +47,70 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Game Rules")
 	float GetCountDownAtLastSavePoint() const { return CountdownAtLastSavePoint; }
 
-	UFUNCTION(BlueprintPure, Category = "Save Point")
+	UFUNCTION(BlueprintPure, Category = "Player Inventory")
 	TArray<AActor*> GetPlayerInventory() const { return SavePlayerInventory; }
 
+	// Alternative method for preserving number of keys between savepoints
+	UFUNCTION(BlueprintPure, Category = "Player Inventory")
+	int GetSaveNumberOfKeys() const { return SaveNumberOfKeys; }
+
+	UFUNCTION(BlueprintPure, Category = "Player Inventory")
+	int GetSaveNumberOfTreasures() const { return SaveNumberOfTreasures; }
+
+	UFUNCTION(BlueprintPure, Category = "Player Inventory")
+	int GetCurrentNumberOfTreasures() const { return CurrentNumberOfTreasures; }
+	
+
+	// Initialize the original values of the time,life, and location related variables
+	// Will also be used for resetting between new games 
+	UFUNCTION(BlueprintCallable, Category = "Game Rules")
+	void InitGameRules();
+
 protected:
-	// Timer to indicate remaining time for the player to clear level
+
+	 // Save the very first starting location (which is not a save point)
+	// because the game mode and level blueprint will need to respawn player if 
+	// they die somewhere in the first level (i.e. before any known savepoints)
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
-		float CountDown;
+	FVector GameStartLocation;
 
 	// How many seconds does player have at the beginning of each level?
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Game Rules")
-		float StartingTime = 30;
+	float StartingTime = 30;
+
+	// Timer to indicate remaining time for the player to clear level
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
+	float CountDown = StartingTime;
 
 	// How many lives does the player have in the beginning of the game?
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Game Rules")
-		int StartingLives = 5;
+	int StartingLives = 5;
 
 	// How many lives does the player have at any given moment
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
-		int CurrentLives;
+	int CurrentLives = StartingLives;
 
 	// Where is the last savepoint accessed by player located?
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
-		FVector LastSavePointLocation;
+	FVector LastSavePointLocation = GameStartLocation; // Initialize it with an invalid value first
 
 	// What was the countdown timer when player reached last savepoint?
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
-		float CountdownAtLastSavePoint;
+	float CountdownAtLastSavePoint = StartingTime;
 
 	// Save the player's inventory list
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Save Point")
-		TArray<AActor*> SavePlayerInventory;
+	TArray<AActor*> SavePlayerInventory;
+
+	// Alternative method for the key inventory
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Save Point")
+	int SaveNumberOfKeys;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Save Point")
+	int CurrentNumberOfTreasures;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Save Point")
+	int SaveNumberOfTreasures;
 
 private:
 	TArray<UInteractionComponentBase*> InteractionCommandStack;

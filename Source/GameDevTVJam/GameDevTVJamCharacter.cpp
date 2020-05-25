@@ -124,6 +124,19 @@ void AGameDevTVJamCharacter::RemoveKeyFromInventory(AActor* KeyToRemove)
 	InventoryKeyList.RemoveSingleSwap(KeyToRemove);
 }
 
+void AGameDevTVJamCharacter::SetInventoryKeyList(TArray<AActor*> NewList)
+{
+	InventoryKeyList = NewList;
+}
+
+void AGameDevTVJamCharacter::RemoveKeyFromInventory_alt()
+{
+	if (NumberOfKeys > 0)
+	{
+		NumberOfKeys--;
+	}
+}
+
 void AGameDevTVJamCharacter::AttemptJump()
 {
 

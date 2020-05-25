@@ -33,3 +33,24 @@ void UMyGameInstance::AddTime(float ExtraTime)
 {
 	CountDown += ExtraTime;
 }
+
+void UMyGameInstance::InitGameRules()
+{
+	StartingTime = 30;
+	CountDown = StartingTime;
+	CountdownAtLastSavePoint = StartingTime;
+
+	StartingLives = 5;
+	CurrentLives = StartingLives;
+
+	// We probably don't need this because it is first set by Main Menu WBP
+	// LastSavePointLocation = GameStartLocation;
+
+	// Empty out the inventory
+	SavePlayerInventory.Empty();
+
+	// Alternative for emptying inventory list
+	SaveNumberOfKeys = 0;
+
+	CurrentNumberOfTreasures, SaveNumberOfTreasures =  0;
+}
