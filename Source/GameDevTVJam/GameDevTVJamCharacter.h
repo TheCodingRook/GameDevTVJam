@@ -177,6 +177,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!
 	bool bCanClimb;
 
+	// Bool for setting player win state
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character")
+	bool bIsVictorious;
+
 private:
 	// Bool to store the player's current carrying status
 	bool bIsEncumbered;
