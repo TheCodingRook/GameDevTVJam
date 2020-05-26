@@ -112,6 +112,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Save Point")
 	int SaveNumberOfTreasures;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
+	int CurrentLevel = 1;
+
+	// Record if player has already acquired the climbing ability
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Game Rules")
+	bool SaveClimbAbility = false;
+
 private:
 	TArray<UInteractionComponentBase*> InteractionCommandStack;
 

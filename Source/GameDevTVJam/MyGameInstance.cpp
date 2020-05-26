@@ -53,4 +53,6 @@ void UMyGameInstance::InitGameRules()
 	SaveNumberOfKeys = 0;
 
 	CurrentNumberOfTreasures, SaveNumberOfTreasures =  0;
+
+	SaveClimbAbility = false;
 }

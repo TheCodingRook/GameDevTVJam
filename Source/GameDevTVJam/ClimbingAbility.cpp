@@ -34,7 +34,7 @@ void UClimbingAbility::Climb()
 	FCollisionQueryParams WallClimbQueryParams;
 	WallClimbQueryParams.AddIgnoredActor(OwnerCharacter);
 
-	DrawDebugLine(GetWorld(), WallTraceStart, WallTraceEnd, FColor::Red, false , 1.f,(uint8)'\000', 5.f);
+	//DrawDebugLine(GetWorld(), WallTraceStart, WallTraceEnd, FColor::Red, false , 1.f,(uint8)'\000', 5.f);
 
 	FVector WallLocation;
 	FVector WallNormal = WallHitResult.Normal;
@@ -72,11 +72,11 @@ void UClimbingAbility::Climb()
 		//UE_LOG(LogTemp, Warning, TEXT("Rotation of actor was: %s"), *OwnerCharacter->GetActorForwardVector().ToString());
 		//UE_LOG(LogTemp, Warning, TEXT("Detected ledge at: %s!"), *WallHitResult.Location.ToString())
 		
-		DrawDebugSphere(GetWorld(), WallLocation, ClimbDetectRadius / 2, 16, FColor::Green, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), WallLocation, ClimbDetectRadius / 2, 16, FColor::Green, false, 1, 5.f);
 	}
 	else
 	{
-		DrawDebugSphere(GetWorld(), WallTraceEnd, ClimbDetectRadius, 16, FColor::Green, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), WallTraceEnd, ClimbDetectRadius, 16, FColor::Green, false, 1, 5.f);
 	}
 
 	// SECOND HORIZONTAL TRACER TO DETECT WALL GAPS ABOVE
@@ -88,7 +88,7 @@ void UClimbingAbility::Climb()
 	FCollisionQueryParams GapQueryParams;
 	GapQueryParams.AddIgnoredActor(OwnerCharacter);
 
-	DrawDebugLine(GetWorld(), GapTraceStart, GapTraceEnd, FColor::Cyan, false, 1.f, (uint8)'\000', 5.f);
+	//DrawDebugLine(GetWorld(), GapTraceStart, GapTraceEnd, FColor::Cyan, false, 1.f, (uint8)'\000', 5.f);
 
 	bool NoGapFound = GetWorld()->SweepSingleByChannel(
 		GapHitResult,
@@ -116,11 +116,11 @@ void UClimbingAbility::Climb()
 		{
 			NoGapLocation.Y = GapHitResult.Location.Y + ClimbDetectRadius;
 		}
-		DrawDebugSphere(GetWorld(), NoGapLocation, ClimbDetectRadius / 2, 16, FColor::Black, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), NoGapLocation, ClimbDetectRadius / 2, 16, FColor::Black, false, 1, 5.f);
 	}
 	else
 	{
-		DrawDebugSphere(GetWorld(), GapTraceEnd, ClimbDetectRadius, 16, FColor::Black, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), GapTraceEnd, ClimbDetectRadius, 16, FColor::Black, false, 1, 5.f);
 	}
 
 	//* Now detect the flat horizontal surface (i.e. top) of detected wall */
@@ -129,7 +129,7 @@ void UClimbingAbility::Climb()
 	FVector FlatSurfaceTraceStart = GapTraceEnd;
 	FVector FlatSurfaceTraceEnd = FlatSurfaceTraceStart - (OwnerCharacter->GetActorUpVector() * VerticalOffset);
 
-	DrawDebugLine(GetWorld(), FlatSurfaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 5.f);
+	//DrawDebugLine(GetWorld(), FlatSurfaceTraceStart, FlatSurfaceTraceEnd, FColor::Yellow, false, 1.f, (uint8)'\000', 5.f);
 	
 
 	FCollisionQueryParams FlatSurfaceClimbQueryParams;
@@ -157,12 +157,12 @@ void UClimbingAbility::Climb()
 		LedgeLocation.Y = WallLocation.Y;
 		LedgeLocation.Z = FlatSurfaceHitResult.Location.Z - ClimbDetectRadius;
 
-		DrawDebugSphere(GetWorld(), LedgeLocation, ClimbDetectRadius / 2, 16, FColor::Magenta, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), LedgeLocation, ClimbDetectRadius / 2, 16, FColor::Magenta, false, 1, 5.f);
 	}
 
 	else
 	{
-		DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::Magenta, false, 1, 5.f);
+		//DrawDebugSphere(GetWorld(), FlatSurfaceTraceEnd, ClimbDetectRadius, 16, FColor::Magenta, false, 1, 5.f);
 	}
 
 
@@ -221,7 +221,7 @@ void UClimbingAbility::Climb()
 			LedgeLocation.Y = WallHitResult.Location.Y;
 			LedgeLocation.Z = FlatSurfaceHitResult.Location.Z - ClimbDetectRadius;
 
-			DrawDebugSphere(GetWorld(), LedgeLocation, 20.f, 16, FColor::Orange, false, 1, 5.f);
+			//DrawDebugSphere(GetWorld(), LedgeLocation, 20.f, 16, FColor::Orange, false, 1, 5.f);
 
 
 			// Calculate distance (Z-axis only?) between climb-able ledge and "ClimbSocket" 
