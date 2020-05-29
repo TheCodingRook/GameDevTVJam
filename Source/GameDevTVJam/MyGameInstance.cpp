@@ -48,11 +48,14 @@ void UMyGameInstance::InitGameRules()
 
 	// Empty out the inventory
 	SavePlayerInventory.Empty();
+	CurrentNumberOfTreasures, SaveNumberOfTreasures = 0;
 
-	// Alternative for emptying inventory list
+	// Alternative for emptying inventory list (keys)
 	SaveNumberOfKeys = 0;
 
-	CurrentNumberOfTreasures, SaveNumberOfTreasures =  0;
-
+	// Remove climbing ability
 	SaveClimbAbility = false;
+
+	// Reset the level count
+	CurrentLevel = 1;
 }

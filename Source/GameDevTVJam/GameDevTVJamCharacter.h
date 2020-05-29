@@ -181,6 +181,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character")
 	bool bIsVictorious;
 
+	/** Sound to play each time we jump */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	class USoundBase* JumpSound;
+
 private:
 	// Bool to store the player's current carrying status
 	bool bIsEncumbered;

@@ -10,6 +10,7 @@
 #include "ClimbingAbility.h"
 #include "InteractionComponentBase.h"
 #include "MyGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 
 AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 {
@@ -147,6 +148,10 @@ void AGameDevTVJamCharacter::AttemptJump()
 	}
 	else if (!bIsEncumbered)
 	{
+		if (JumpSound)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, JumpSound, GetActorLocation());
+		}
 		Jump();
 	}
 }
