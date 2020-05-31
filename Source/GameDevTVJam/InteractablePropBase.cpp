@@ -13,7 +13,7 @@ AInteractablePropBase::AInteractablePropBase()
 
 	// Set up the mesh for this prop
 	PropMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Prop Mesh"));
-	PropMesh->SetupAttachment(RootComponent);
+	SetRootComponent(PropMesh);
 
 	InteractionTrigger = CreateDefaultSubobject<USphereComponent>("Interaction Trigger");
 	InteractionTrigger->SetSphereRadius(100.f);

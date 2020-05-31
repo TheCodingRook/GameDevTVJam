@@ -148,7 +148,7 @@ void AGameDevTVJamCharacter::AttemptJump()
 	}
 	else if (!bIsEncumbered)
 	{
-		if (JumpSound)
+		if (JumpSound && !GetMovementComponent()->IsFalling())
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, JumpSound, GetActorLocation());
 		}

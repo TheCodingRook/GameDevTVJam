@@ -2,6 +2,7 @@
 
 
 #include "Pickup.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APickup::APickup()
@@ -15,6 +16,8 @@ APickup::APickup()
 	// All pickups start active
 	bIsActive = true;
 
+	// Set up the sound component for pickups
+	PickupSound = CreateDefaultSubobject<USoundBase>(TEXT("PickupSound"));
 }
 
 // Called when the game starts or when spawned

@@ -48,7 +48,8 @@ void UMyGameInstance::InitGameRules()
 
 	// Empty out the inventory
 	SavePlayerInventory.Empty();
-	CurrentNumberOfTreasures, SaveNumberOfTreasures = 0;
+	CurrentNumberOfTreasures = 0;
+	SaveNumberOfTreasures = 0;
 
 	// Alternative for emptying inventory list (keys)
 	SaveNumberOfKeys = 0;

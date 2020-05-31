@@ -48,6 +48,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
 		float PickupLifeSpan; // TODO: Do I need a setter?
 
+	/** Sound to play when Pickup is collected */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
+	class USoundBase* PickupSound;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
 		class UStaticMeshComponent* PickupMesh; // forward decleration here
