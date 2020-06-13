@@ -11,6 +11,7 @@
 #include "InteractionComponentBase.h"
 #include "MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameDevTVJamGameMode.h"
 
 AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 {
@@ -110,19 +111,10 @@ void AGameDevTVJamCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AGameDevTVJamCharacter::PerformUnCrouch);
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AGameDevTVJamCharacter::Interact);
 	PlayerInputComponent->BindAction("Interact", IE_Released, this, &AGameDevTVJamCharacter::StopInteracting);
+	PlayerInputComponent->BindAction("Pause", IE_Pressed, this, &AGameDevTVJamCharacter::PauseGame);
 
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AGameDevTVJamCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AGameDevTVJamCharacter::TouchStopped);
-}
-
-void AGameDevTVJamCharacter::AddKeyToInventory(AActor* KeyToAdd)
-{
-	InventoryKeyList.AddUnique(KeyToAdd);
-}
-
-void AGameDevTVJamCharacter::RemoveKeyFromInventory(AActor* KeyToRemove)
-{
-	InventoryKeyList.RemoveSingleSwap(KeyToRemove);
 }
 
 void AGameDevTVJamCharacter::SetInventoryKeyList(TArray<AActor*> NewList)
@@ -130,7 +122,12 @@ void AGameDevTVJamCharacter::SetInventoryKeyList(TArray<AActor*> NewList)
 	InventoryKeyList = NewList;
 }
 
-void AGameDevTVJamCharacter::RemoveKeyFromInventory_alt()
+void AGameDevTVJamCharacter::AddKeyToInventory()
+{
+	NumberOfKeys++;
+}
+
+void AGameDevTVJamCharacter::RemoveKeyFromInventory()
 {
 	if (NumberOfKeys > 0)
 	{
@@ -225,4 +222,10 @@ void AGameDevTVJamCharacter::StopInteracting()
 	{
 		InteractionToExecute->StopInteraction(this);
 	}
+}
+
+void AGameDevTVJamCharacter::PauseGame()
+{
+	AGameDevTVJamGameMode* GameMode = Cast<AGameDevTVJamGameMode>(UGameplayStatics::GetGameMode(this));
+	GameMode->PauseGame();
 }

@@ -19,30 +19,7 @@ class AGameDevTVJamCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void AddKeyToInventory(AActor* KeyToAdd);
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveKeyFromInventory(AActor* KeyToRemove);
-
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void SetInventoryKeyList(TArray<AActor*> NewList);
-
-	/* Alternative implementation for keys
-	 *
-	 */
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void AddKeyToInventory_alt() { NumberOfKeys++; }
-
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	void RemoveKeyFromInventory_alt();
-
-	UFUNCTION(BlueprintPure, Category = "Inventory")
-	int GetNumberOfKeys() const { return NumberOfKeys; }
+	
 
 protected:
 
@@ -87,6 +64,9 @@ protected:
 	/** Called for stopping interaction with an interactable */
 	void StopInteracting();
 
+	/** Called for pausing game */
+	void PauseGame();
+
 public:
 	AGameDevTVJamCharacter();
 
@@ -103,8 +83,12 @@ public:
 	void SetEncumbered(bool NewState);
 
 	// Sets the climbing ability
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Climbing Ability")
 	void SetCanClimb(bool NewClimbSetting);
+
+	// Sets the climbing ability
+	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
+	bool GetCanClimb() const { return bCanClimb; }
 
 	// Returns whether character is climbing
 	UFUNCTION(BlueprintPure, Category = "Climbing Ability")
@@ -146,6 +130,24 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetIsDead(bool DeathStatus);
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+		TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+		void SetInventoryKeyList(TArray<AActor*> NewList);
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+		void AddKeyToInventory();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+		void RemoveKeyFromInventory();
+
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	void SetNumberOfKeys( int NewKeyes) { NumberOfKeys = NewKeyes; }
+
+	UFUNCTION(BlueprintPure, Category = "Inventory")
+		int GetNumberOfKeys() const { return NumberOfKeys; }
 
 protected:
 	// Bool to let the animation blueprint know character is hanging

@@ -14,5 +14,8 @@ class AGameDevTVJamGameMode : public AGameModeBase
 public:
 	AGameDevTVJamGameMode();
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Gameplay")
+	void PauseGame();
+
 
 };

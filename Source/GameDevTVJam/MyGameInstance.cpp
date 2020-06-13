@@ -3,6 +3,8 @@
 
 #include "MyGameInstance.h"
 #include "InteractionComponentBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameDevTVJamCharacter.h"
 
 void UMyGameInstance::PushNewInteractionCommand(UInteractionComponentBase* NewInteractionCommand)
 {
@@ -32,6 +34,41 @@ UInteractionComponentBase* UMyGameInstance::GetLatestInteractionCommand()
 void UMyGameInstance::AddTime(float ExtraTime)
 {
 	CountDown += ExtraTime;
+}
+
+void UMyGameInstance::ReachedSavePoint(bool bIsNewLevel, FVector SpawnOffset)
+{
+	AGameDevTVJamCharacter* PlayerCharacter = Cast<AGameDevTVJamCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+
+	// Save the player's location
+	LastSavePointLocation = PlayerCharacter->GetActorLocation() + SpawnOffset;
+	
+	// Deal with a new level savepoint
+	if (bIsNewLevel)
+	{
+		CurrentLevel++;
+		CountDown += StartingTime;
+	}
+
+	// Save all the game variables
+	CountdownAtLastSavePoint = CountDown;
+	SaveNumberOfKeys = PlayerCharacter->GetNumberOfKeys();
+	SaveNumberOfTreasures = CurrentNumberOfTreasures;
+	SaveClimbAbility = PlayerCharacter->GetCanClimb();
+}
+
+void UMyGameInstance::LoadGameData()
+{
+	AGameDevTVJamCharacter* PlayerCharacter = Cast<AGameDevTVJamCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));
+	// Update/load player game data variables
+	PlayerCharacter->SetCanClimb(SaveClimbAbility);
+	PlayerCharacter->SetNumberOfKeys(SaveNumberOfKeys);
+	PlayerCharacter->SetActorLocation(CurrentLives < StartingLives ? LastSavePointLocation : GameStartLocation);
+
+	// Update the rest of game instance data variables
+	CountDown = CountdownAtLastSavePoint;
+	CurrentNumberOfTreasures = SaveNumberOfTreasures;
+
 }
 
 void UMyGameInstance::InitGameRules()
