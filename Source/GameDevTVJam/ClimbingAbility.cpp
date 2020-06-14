@@ -199,66 +199,6 @@ void UClimbingAbility::Climb()
 		//OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
 		OwnerCharacter->SetIsClimbing(true);
 	}
-
-
-	//////////////
-	//// OLD IMPLEMENTATION BELOW
-
-	if (FoundVerticalWall)
-	{
-		//if (FoundFlatSurface)
-		/*{
-
-			// Store the location of the hit result: this is where the player gets teleported at the end
-			LocationAfterClimb = FlatSurfaceHitResult.Location;
-
-
-
-			// Calculate ledge's location
-			FVector LedgeLocation;
-
-			LedgeLocation.X = WallHitResult.Location.X; // either of wall or flat surface would probably be fine here
-			LedgeLocation.Y = WallHitResult.Location.Y;
-			LedgeLocation.Z = FlatSurfaceHitResult.Location.Z - ClimbDetectRadius;
-
-			//DrawDebugSphere(GetWorld(), LedgeLocation, 20.f, 16, FColor::Orange, false, 1, 5.f);
-
-
-			// Calculate distance (Z-axis only?) between climb-able ledge and "ClimbSocket" 
-
-			float DistanceFromLedge =
-				LedgeLocation.Z -
-				OwnerCharacter->GetMesh()->GetSocketByName(FName("HipsSocket"))->GetSocketLocation(OwnerCharacter->GetMesh()).Z -100.f;// Adjustment to work with animation
-			
-
-			//UE_LOG(LogTemp, Warning, TEXT("Vertical distance from ledge: %f"), DistanceFromLedge)
-
-			// Probably need to check if we can reach the ledge when wall and flat surface on top were detected
-
-			/////////////////////////////////////////////////////////
-			// ACTION OF CLIMBING HERE
-			//
-			
-			// Prevent capsule from droppping to the ground due to gravity
-			OwnerCharacter->GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Flying);
-
-			RotationAfterClimb = FRotator(0, -90 * FMath::RoundToInt(WallNormal.Y), 0);
-			//OwnerCharacter->GetCapsuleComponent()->MoveComponent(
-				//FVector(OwnerCharacter->GetActorLocation().X - WallLocation.X, WallLocation.Y - OwnerCharacter->GetActorLocation().Y + 50.f * FMath::RoundToInt(WallNormal.Y), DistanceFromLedge),
-				//RotationAfterClimb,
-				//false
-			//);
-			OwnerCharacter->GetCharacterMovement()->StopMovementImmediately();
-			OwnerCharacter->DisableInput(GetWorld()->GetFirstPlayerController());
-			
-			//
-			////////////////////////////////////////////////////////////
-
-			// Set the member field of character accordingly
-			OwnerCharacter->SetIsClimbing(true);
-		}
-*/
-	}
 }
 
 void UClimbingAbility::ClimbLedge()
