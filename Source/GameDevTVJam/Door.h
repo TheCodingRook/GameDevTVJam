@@ -34,8 +34,4 @@ protected:
 	// Attempts to either close or open door depending on the elements that triggered it
 	UFUNCTION()
 	void AttemptOperateDoor();
-
-	//TEMPORARY DELETE AFTERWARDS
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Door movement")
-	TArray<AActor*> PuzzleElementPlaceHolder;
 };

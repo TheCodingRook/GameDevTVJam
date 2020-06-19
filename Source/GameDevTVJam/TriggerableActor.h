@@ -37,12 +37,12 @@ protected:
 	class USoundBase* TriggerSound;
 
 	// Helpful to store starting location if this triggerable actor moves when triggered
-	UPROPERTY(BlueprintReadWrite, Category = "Door movement")
+	UPROPERTY(BlueprintReadWrite, Category = "Setup setttings")
 	FVector StartingLocation;
 
 	// Determines whether to play a trigger sound the first time
 	// Useful when things are set to trigger offscreen when game starts
-	UPROPERTY(BlueprintReadWrite, Category = "Door movement")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Setup settings")
 	bool bMuteFirstSound;
 
 	// Called when the game starts or when spawned

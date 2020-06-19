@@ -61,7 +61,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	// List of PuzzlElement object references from the above actors' list
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Puzzle Elements")
+	UPROPERTY(BlueprintReadWrite, Category = "Puzzle Elements")
 	TArray<UPuzzleElementComponent*> PuzzleElementsList;
 
 private:
