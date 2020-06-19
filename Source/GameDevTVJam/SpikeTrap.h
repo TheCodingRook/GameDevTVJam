@@ -31,6 +31,8 @@ public:
 	UFUNCTION()
 	void NotifySpikeTrapBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
+	void PostLoad() override;
+
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Trap settings")
 		bool bIsActive;
