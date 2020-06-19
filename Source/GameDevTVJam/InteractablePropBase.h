@@ -33,12 +33,24 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Interaction")
 	class UInteractionComponentBase* GetInteractionCommand() const { return InteractionCommand; }
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
-	void OnWasInteractedWith();
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void OnWasInteractedWith();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	void OnReEnableInteraction();
 
+	UFUNCTION()
+	void OnPropBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+	UFUNCTION()
+	void OnPropEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
+
+	/* Function to determine whether this interaction requires another prop in order to work
+	 * This returns true by default, for props that do not require anything else;
+	 * Override if the prop requires a combination prop for an interaction!
+	 */
+	//UFUNCTION(BlueprintCallable, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	virtual bool ComboQuery(class AGameDevTVJamCharacter* PlayerCharacter);
 
 protected:
 	// Called when the game starts or when spawned
@@ -57,4 +69,26 @@ protected:
 	// Interaction command for this prop
 	UPROPERTY(VisibleAnywhere, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
 	UInteractionComponentBase* InteractionCommand;
+
+	// Class that implements the interaction widget for this prop
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UInteractionWidget> InteractionPromptClass;
+
+	// Pointer to Interaction prompt for this prop
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	UInteractionWidget* InteractionPrompt;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	FVector CustomWidgetOffset;
+
+	// Is it necessary for this prop to display an interaction prompt?
+	UPROPERTY(BlueprintReadWrite, Category = "Interaction", meta = (AllowPrivateAccess = "true"))
+	bool bIsWidgetNecessary = true;
+
+	/** Sound to play when Prop is interacted with (leave empty in Blueprint if not needed */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Interaction")
+	class USoundBase* InteractionSound;
+
+private:
+	void SetPromptScreenLocation();
 };

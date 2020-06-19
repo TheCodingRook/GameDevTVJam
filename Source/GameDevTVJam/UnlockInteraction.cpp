@@ -2,6 +2,8 @@
 
 
 #include "UnlockInteraction.h"
+#include "TreasureChest.h"
+#include "GameDevTVJamStatics.h"
 
 UUnlockInteraction::UUnlockInteraction()
 {
@@ -10,8 +12,26 @@ UUnlockInteraction::UUnlockInteraction()
 
 void UUnlockInteraction::ExecuteInteraction(AGameDevTVJamCharacter* Instigator)
 {
-	// Not calling Super here because if unlock interaction is unavailable (e.g. due to lack of a corresponding key)
-	// there is no point executing it (for now)
-	// Super::ExecuteInteraction(Instigator);
-	UnlockProp(Instigator);
+	ATreasureChest* ChestToUnlock = Cast<ATreasureChest>(GetOwner());
+	if (ChestToUnlock)
+	{
+		if (!ChestToUnlock->IsAlreadyUnlocked() && ChestToUnlock->ComboQuery(Instigator))
+		{
+			// Unlock the chest and call the events for Blueprint
+			ChestToUnlock->InsertKey();
+			ChestToUnlock->OpenLid();
+
+			//~ Update Game Instance with the necessary data
+			int UpdatedTreasures = UGameDevTVJamStatics::GetMyGameInstance(this)->GetCurrentNumberOfTreasures() + 1;
+			UGameDevTVJamStatics::GetMyGameInstance(this)->SetNumberOfTreasures(UpdatedTreasures);
+
+			int UpdatedKeys = UGameDevTVJamStatics::GetGameDevTVJamCharacter(this)->GetNumberOfKeys() - 1;
+			UGameDevTVJamStatics::GetGameDevTVJamCharacter(this)->SetNumberOfKeys(UpdatedKeys);
+
+			UGameDevTVJamStatics::GetGameHUD(this)->UpdateTreasuresFound(UpdatedTreasures);
+			UGameDevTVJamStatics::GetGameHUD(this)->UpdateKeysFound(UpdatedKeys);
+
+			Super::ExecuteInteraction(Instigator);
+		}
+	}
 }

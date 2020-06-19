@@ -6,6 +6,9 @@
 #include "GameFramework/Character.h"
 #include "GameDevTVJamCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerDied);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPlayerWon);
+
 UCLASS(config=Game)
 class AGameDevTVJamCharacter : public ACharacter
 {
@@ -70,6 +73,15 @@ protected:
 public:
 	AGameDevTVJamCharacter();
 
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, AActor* DamageCauser) override;
+
+	/*~ Delegates for win/lose states*/
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Event Dispatchers", meta = (AllowPrivateAccess = true))
+	FPlayerDied OnPlayerDied;
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Event Dispatchers", meta = (AllowPrivateAccess = true))
+	FPlayerWon OnPlayerWon;
+
+
 	/** Returns SideViewCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
 	/** Returns CameraBoom subobject **/
@@ -128,8 +140,14 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Character")
 	bool IsDead() const { return bIsDead; }
 
+	UFUNCTION(BlueprintPure, Category = "Character")
+	bool IsVictorious() const { return bIsVictorious; }
+
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void SetIsDead(bool DeathStatus);
+
+	UFUNCTION(BlueprintCallable, Category = "Character")
+	void SetIsVictorious(bool VictoryStatus);
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 		TArray<AActor*> GetInventoryKeys() const { return InventoryKeyList; }
@@ -148,6 +166,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Inventory")
 		int GetNumberOfKeys() const { return NumberOfKeys; }
+
+	// Helper function called by GameMode to perform a victory animation when player wins
+	void VictoryAnimation();
 
 protected:
 	// Bool to let the animation blueprint know character is hanging
@@ -173,7 +194,7 @@ protected:
 
 	// Bool to keep track if player is alive
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Character")
-	bool bIsDead;
+	bool bIsDead = false;
 
 	// Bool to store the player's current climbing ability status (enabled or disabled)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Climbing Ability") // Leave EditAnywhere for debugging purposes only!
@@ -186,6 +207,10 @@ protected:
 	/** Sound to play each time we jump */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
 	class USoundBase* JumpSound;
+
+	/** Sound to play at death */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Gameplay")
+	class USoundBase* DeathSound;
 
 private:
 	// Bool to store the player's current carrying status

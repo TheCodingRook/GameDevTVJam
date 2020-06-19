@@ -37,6 +37,8 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Climbing")
 	FRotator GetRotationAfterClimbing() const { return RotationAfterClimb; }
 
+	FVector GetManualMeshOffset() const { return ManualMeshOffset; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

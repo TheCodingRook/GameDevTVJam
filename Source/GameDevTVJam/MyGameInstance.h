@@ -39,10 +39,19 @@ public:
 	void LostLife() { CurrentLives--; }
 
 	UFUNCTION(BlueprintPure, Category = "Game Data")
+	int GetStartingLives() const { return StartingLives; }
+
+	UFUNCTION(BlueprintPure, Category = "Game Data")
 	int GetCurrentLives() const { return CurrentLives; }
 
 	UFUNCTION(BlueprintPure, Category = "Game Data")
 	FVector GetLastSavePointLocation() const { return LastSavePointLocation; }
+
+	UFUNCTION(BlueprintPure, Category = "Game Data")
+	float GetCountDown() const { return CountDown; }
+
+	UFUNCTION(BlueprintCallable, Category = "Game Data")
+	void SetCountDown(float NewCountDown);
 
 	UFUNCTION(BlueprintPure, Category = "Game Data")
 	float GetCountDownAtLastSavePoint() const { return CountdownAtLastSavePoint; }
@@ -59,7 +68,13 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "Player Inventory")
 	int GetCurrentNumberOfTreasures() const { return CurrentNumberOfTreasures; }
+
+	UFUNCTION(BlueprintCallable, Category = "Player Inventory")
+	void SetNumberOfTreasures(int NewTreasures);
 	
+	UFUNCTION(BlueprintPure, Category = "Game Data")
+	int GetCurrentLevel() const { return CurrentLevel; }
+
 	UFUNCTION(BlueprintCallable, Category = "Game Data")
 	void ReachedSavePoint(bool bIsNewLevel, FVector SpawnOffset);
 

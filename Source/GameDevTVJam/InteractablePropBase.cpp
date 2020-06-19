@@ -4,6 +4,8 @@
 #include "InteractablePropBase.h"
 #include "InteractionComponentBase.h"
 #include "Components/SphereComponent.h"
+#include "InteractionWidget.h"
+#include "GameDevTVJamStatics.h"
 
 // Sets default values
 AInteractablePropBase::AInteractablePropBase()
@@ -20,14 +22,98 @@ AInteractablePropBase::AInteractablePropBase()
 	InteractionTrigger->SetupAttachment(PropMesh);
 }
 
-void AInteractablePropBase::OnWasInteractedWith_Implementation()
+void AInteractablePropBase::OnWasInteractedWith()
 {
-	// To be extended in Blueprint
+	if (bIsWidgetNecessary)
+	{
+		InteractionPrompt->SetVisibility(ESlateVisibility::Hidden);
+	}
+	else
+	{
+		InteractionPrompt->RemoveFromParent();
+	}
+	UGameplayStatics::PlaySoundAtLocation(this, InteractionSound, GetActorLocation());
 }
 
-void AInteractablePropBase::OnReEnableInteraction_Implementation()
+void AInteractablePropBase::OnReEnableInteraction()
+{		
+	if (bIsWidgetNecessary)
+	{
+		// Set the screen location of the interaction prompt widget first and then add to viewport!
+		SetPromptScreenLocation();
+
+		InteractionPrompt->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void AInteractablePropBase::OnPropBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	// To be extended in Blueprint
+	AGameDevTVJamCharacter* PlayerCharacter = Cast<AGameDevTVJamCharacter>(OtherActor);
+	if (PlayerCharacter)
+	{
+	//	if (!InteractionPrompt)
+		//{	// Create interaction prompt widget if there isn't one yet
+			InteractionPrompt = CreateWidget<UInteractionWidget>(GetWorld(), InteractionPromptClass, FName("Interaction Prompt"));
+			InteractionPrompt->SetInteractableProp(this);
+			InteractionPrompt->SetInteractablePropText(InteractionCommand->GetInteractionText());
+
+			// Update appearance of the propmt widget
+			InteractionPrompt->SetIsActionAvailable(ComboQuery(PlayerCharacter));
+			InteractionPrompt->UpdateInteractionPrompt();
+			
+			if (bIsWidgetNecessary)
+			{
+				// Set the screen location of the interaction prompt widget first and then add to viewport!
+				SetPromptScreenLocation();
+				InteractionPrompt->AddToViewport();
+			}
+	//	}
+	/*	else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Recycling existing widget..."))
+			if (bIsWidgetNecessary)
+			{
+				// Update appearance of the propmt widget
+				InteractionPrompt->SetIsActionAvailable(ComboQuery(PlayerCharacter));
+				InteractionPrompt->UpdateInteractionPrompt();
+
+				// Set the screen location of the interaction prompt widget 
+				SetPromptScreenLocation();
+
+				// Make widget visible again
+				InteractionPrompt->SetVisibility(ESlateVisibility::Visible);
+				UE_LOG(LogTemp, Warning, TEXT("Setting %s's prompt visible again"), *GetName())
+				UE_LOG(LogTemp, Warning, TEXT("Prompt object name: %s"), *InteractionPrompt->GetName())
+			}
+		}
+	*/
+		// Register the interaction command with the Game Instance
+		Cast<UMyGameInstance>(GetGameInstance())->PushNewInteractionCommand(InteractionCommand);
+	}
+}
+
+void AInteractablePropBase::OnPropEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName())
+	AGameDevTVJamCharacter* PlayerCharacter = Cast<AGameDevTVJamCharacter>(OtherActor);
+	if (PlayerCharacter)
+	{
+	//	if (InteractionPrompt)
+	//	{
+	//		if (bIsWidgetNecessary)
+	//		{
+	//			InteractionPrompt->SetVisibility(ESlateVisibility::Hidden);
+				UE_LOG(LogTemp, Warning, TEXT("Just hiding prompt..."))
+	//		}
+	//		else
+	//		{
+				InteractionPrompt->RemoveFromParent();
+	//		}
+	//	}
+
+		// De-register the interaction command with the Game Instance
+		Cast<UMyGameInstance>(GetGameInstance())->PopInteractionCommand(InteractionCommand);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -48,6 +134,23 @@ void AInteractablePropBase::BeginPlay()
 		}
 	}
 
+	OnActorBeginOverlap.AddDynamic(this, &AInteractablePropBase::OnPropBeginOverlap);
+	OnActorEndOverlap.AddDynamic(this, &AInteractablePropBase::OnPropEndOverlap);
+
+}
+
+bool AInteractablePropBase::ComboQuery(AGameDevTVJamCharacter* PlayerCharacter)
+{
+	return true;
+}
+
+void AInteractablePropBase::SetPromptScreenLocation()
+{
+	FVector2D ScreenLocation;
+	UGameDevTVJamStatics::GetGameDevTVJamController(this)->ProjectWorldLocationToScreen(GetActorLocation() + CustomWidgetOffset,ScreenLocation);
+	InteractionPrompt->SetPositionInViewport(ScreenLocation);
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *ScreenLocation.ToString())
+	
 }
 
 // Called every frame

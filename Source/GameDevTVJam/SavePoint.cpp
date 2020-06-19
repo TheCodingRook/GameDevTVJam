@@ -4,6 +4,11 @@
 #include "SavePoint.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameDevTVJamCharacter.h"
+#include "MyGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameDevTVJamGameMode.h"
+#include "GameHUDWidget.h"
 
 // Sets default values
 ASavePoint::ASavePoint()
@@ -24,11 +29,41 @@ ASavePoint::ASavePoint()
 	SavePointMesh->SetupAttachment(SaveTrigger);
 }
 
+void ASavePoint::OnSaveTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (bIsActive)
+	{
+		if (Cast<AGameDevTVJamCharacter>(OtherActor))
+		{
+			UMyGameInstance* GameInstance = Cast<UMyGameInstance>(GetGameInstance());
+			GameInstance->ReachedSavePoint(bIsNewLevel, SpawnVectorOffset);
+
+			if (bIsNewLevel)
+			{
+				Cast<AGameDevTVJamGameMode>(UGameplayStatics::GetGameMode(this))->GetGameHUD()->UpdateCurrentLevel(GameInstance->GetCurrentLevel());
+				bIsActive = false;
+			}
+		}
+	}
+}
+
+void ASavePoint::OnBlockingTriggerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if (bIsNewLevel)
+	{
+		if (Cast<AGameDevTVJamCharacter>(OtherActor))
+		{
+			SaveTrigger->SetCollisionProfileName(FName("BlockAllDynamic"));
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void ASavePoint::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	SaveTrigger->OnComponentBeginOverlap.AddDynamic(this, &ASavePoint::OnSaveTriggerOverlap);
+	BlockingTrigger->OnComponentEndOverlap.AddDynamic(this, &ASavePoint::OnBlockingTriggerEndOverlap);
 }
 
 // Called every frame

@@ -19,6 +19,9 @@ enum class EPuzzleElementType : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementTriggered, EPuzzleElementType, ElementType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementUnTriggered, EPuzzleElementType, ElementType);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementActivated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementDeactivated);
+
 /*
  * A generic base component class to implement actors as "puzzle elements" that trigger events or solve other puzzles in combination with
  * other actors that include the same component. The idea is that all actors that are linked through this component have to be activated together
@@ -47,6 +50,19 @@ public:
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnPuzzleElementUnTriggered OnPuzzleElementUnTriggered;
 
+	///////////////////////////
+	// NEW VERSIONS
+	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
+	FOnPuzzleElementActivated OnPuzzleElementActivated;
+
+	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered as off or false or closed etc.
+	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
+	FOnPuzzleElementDeactivated OnPuzzleElementDeactivated;
+
+
+	// END - NEW VERSIONS
+	//////////////////////////////
 	UFUNCTION(BlueprintPure, Category = "Trigger")
 	bool IsTriggered() const { return bIsTriggered; }
 

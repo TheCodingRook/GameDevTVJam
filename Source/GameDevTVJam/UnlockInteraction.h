@@ -14,10 +14,6 @@ class GAMEDEVTVJAM_API UUnlockInteraction : public UInteractionComponentBase
 {
 	GENERATED_BODY()
 
-public:
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Interaction")
-		void UnlockProp(AGameDevTVJamCharacter* Instigator);
-
 protected:
 	UUnlockInteraction();
 	virtual void ExecuteInteraction(AGameDevTVJamCharacter* Instigator) override;

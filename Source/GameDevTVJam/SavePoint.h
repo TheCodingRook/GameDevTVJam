@@ -30,6 +30,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Save Point")
 	bool IsNewLevel() const { return bIsNewLevel; }
 
+	UFUNCTION()
+	void OnSaveTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnBlockingTriggerEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

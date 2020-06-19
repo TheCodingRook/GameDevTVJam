@@ -50,10 +50,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Puzzle Elements")
 	bool AreAllPuzzleElementsActive();
 
+	LogicGateType GetLogicGateType() const { return ElementsLogic; }
+
 protected:
 	// What type of logic connects the various puzzle elements?
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Puzzle Elements")
-		LogicGateType ElementsLogic;
+	LogicGateType ElementsLogic;
 	
 	// Called when the game starts
 	virtual void BeginPlay() override;

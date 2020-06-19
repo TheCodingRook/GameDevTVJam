@@ -36,6 +36,16 @@ void UMyGameInstance::AddTime(float ExtraTime)
 	CountDown += ExtraTime;
 }
 
+void UMyGameInstance::SetCountDown(float NewCountDown)
+{
+	CountDown = NewCountDown;
+}
+
+void UMyGameInstance::SetNumberOfTreasures(int NewTreasures)
+{
+	CurrentNumberOfTreasures = NewTreasures;
+}
+
 void UMyGameInstance::ReachedSavePoint(bool bIsNewLevel, FVector SpawnOffset)
 {
 	AGameDevTVJamCharacter* PlayerCharacter = Cast<AGameDevTVJamCharacter>(UGameplayStatics::GetPlayerCharacter(this, 0));

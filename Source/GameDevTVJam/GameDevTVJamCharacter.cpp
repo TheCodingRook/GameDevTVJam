@@ -12,6 +12,7 @@
 #include "MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameDevTVJamGameMode.h"
+#include "GameHUDWidget.h"
 
 AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 {
@@ -55,7 +56,31 @@ AGameDevTVJamCharacter::AGameDevTVJamCharacter()
 
 	// Create the custom climbing ability component to enable climbing
 	ClimbingAbility = CreateDefaultSubobject<UClimbingAbility>(TEXT("Climbing Ability"));
+}
 
+float AGameDevTVJamCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	if(!bIsDead)
+	{
+		GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_Walking);
+
+		if (bWasMeshAdjusted)
+		{
+			GetCapsuleComponent()->SetCapsuleHalfHeight(98.f);
+			GetCapsuleComponent()->SetCapsuleRadius(42.f);
+			GetMesh()->AddLocalOffset(GetClimbingAbility()->GetManualMeshOffset() * (-1));
+		}
+
+		SetIsDead(true);
+		UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation());
+
+		DisableInput(Cast<APlayerController>(GetController()));
+		OnPlayerDied.Broadcast();
+		Cast<AGameDevTVJamGameMode>(UGameplayStatics::GetGameMode(this))->GetGameHUD()->PlayDeathAnimations();
+	}
+	return Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	
 }
 
 void AGameDevTVJamCharacter::SetCanClimb(bool NewClimbSetting)
@@ -91,6 +116,11 @@ void AGameDevTVJamCharacter::SetWasMeshAdjusted(bool NewMeshAdjustedFlag)
 void AGameDevTVJamCharacter::SetIsDead(bool DeathStatus)
 {
 	bIsDead = DeathStatus;
+}
+
+void AGameDevTVJamCharacter::SetIsVictorious(bool VictoryStatus)
+{
+	bIsVictorious = VictoryStatus;
 }
 
 void AGameDevTVJamCharacter::SetEncumbered(bool NewState)
@@ -133,6 +163,13 @@ void AGameDevTVJamCharacter::RemoveKeyFromInventory()
 	{
 		NumberOfKeys--;
 	}
+}
+
+void AGameDevTVJamCharacter::VictoryAnimation()
+{
+	bIsVictorious = true;
+	SetActorRotation(FRotator(0.f, 0.f, 0.f));
+	DisableInput(Cast<APlayerController>(GetController()));
 }
 
 void AGameDevTVJamCharacter::AttemptJump()
