@@ -46,3 +46,8 @@ void UPuzzleElementComponent::SetPuzzleElementType(EPuzzleElementType InElementT
 {
 	PuzzleElementType = InElementType;
 }
+
+void UPuzzleElementComponent::SetTriggerState(ETriggerState InTriggerState)
+{
+	TriggerState = InTriggerState;
+}

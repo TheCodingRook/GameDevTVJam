@@ -186,19 +186,3 @@ void ASpikeTrap::DeathFromAboveTrap_Implementation()
 {
 	OnTriggered();
 }
-
-
-void ASpikeTrap::PostLoad()
-{
-	
-	Super::PostLoad();
-	/*
-	TInlineComponentArray<UActorListComponent*> ActorListComponent;
-	GetComponents(ActorListComponent);
-
-	TInlineComponentArray<UPuzzleComponent*> PuzzleComponent;
-	GetComponents(PuzzleComponent);
-
-	PuzzleComponent[0]->SetActorsList(ActorListComponent[0]->ActorList);
-	*/
-}

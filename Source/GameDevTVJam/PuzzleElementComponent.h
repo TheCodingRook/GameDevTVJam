@@ -16,6 +16,18 @@ enum class EPuzzleElementType : uint8
 	Type_None UMETA(DisplayName = "Null type")
 };
 
+/* Custom enumeration for defining if a trigger/switch is on or off (rotators or selector types don't have on/off)
+ * other actors that include the same component. The idea is that all actors that are linked through this component have to be activated together
+ * (return true) in order for a puzzle to be solved.
+ */
+UENUM(BlueprintType)
+enum class ETriggerState : uint8
+{
+	Off UMETA(DisplayName = "Off"),
+	On UMETA(DisplayName = "On"),
+	Selector UMETA(DisplayName = "Selector")
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementTriggered, EPuzzleElementType, ElementType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementUnTriggered, EPuzzleElementType, ElementType);
 
@@ -76,6 +88,13 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Puzzle Type")
 	EPuzzleElementType GetPuzzleElementType() const { return PuzzleElementType; }
 
+	// Set the puzzle element trigger state 
+	UFUNCTION(BlueprintCallable, Category = "Puzzle Type")
+	void SetTriggerState(ETriggerState InTriggerState);
+
+	UFUNCTION(BlueprintPure, Category = "Puzzle Type")
+	ETriggerState GetTriggerState() const { return TriggerState; }
+
 
 protected:
 	// Called when the game starts
@@ -84,6 +103,10 @@ protected:
 	// The type of puzzle element this is (as per the above enumeration class)
 	UPROPERTY(EditAnywhere, Category = "Puzzle Type")
 	EPuzzleElementType PuzzleElementType;
+
+	// The state this puzzle element is in , i.e. on/off or selector (as per the above enumeration class)
+	UPROPERTY(EditAnywhere, Category = "Puzzle Type")
+	ETriggerState TriggerState;
 
 private:
 	// The main boolean member field that determines if this PuzzleElement is activated or not
