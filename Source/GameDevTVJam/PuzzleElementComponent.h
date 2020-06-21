@@ -95,6 +95,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Puzzle Type")
 	ETriggerState GetTriggerState() const { return TriggerState; }
 
+	//~ Begin UObject interface
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	//~ End UObject interface
 
 protected:
 	// Called when the game starts

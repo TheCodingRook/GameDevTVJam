@@ -19,8 +19,8 @@ ABrazier::ABrazier()
 	Fire->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 
 	Light = CreateDefaultSubobject<UPointLightComponent>("Light");
-	Light->SetupAttachment(Mesh);
-	Light->SetRelativeLocation(FVector(0.f, 0.f, 140.f));
+	Light->SetupAttachment(Fire);
+	Light->SetRelativeLocation(FVector(0.f, 0.f, 50.f));
 }
 
 void ABrazier::BeginPlay()

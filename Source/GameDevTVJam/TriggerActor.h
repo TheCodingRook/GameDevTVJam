@@ -25,7 +25,6 @@ public:
 	// When extending this function, remember to call Super and call it FIRST!
 	virtual void OnTriggerActivated();
 
-
 	class UPuzzleElementComponent* GetPuzzleElementComponent() const { return PuzzleElement; }
 
 protected:
