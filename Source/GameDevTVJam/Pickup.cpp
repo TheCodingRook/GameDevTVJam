@@ -2,7 +2,8 @@
 
 
 #include "Pickup.h"
-#include "Kismet/GameplayStatics.h"
+#include "Engine/StaticMesh.h"
+#include "GameDevTVJamCharacter.h"
 
 // Sets default values
 APickup::APickup()
@@ -39,9 +40,9 @@ UStaticMeshComponent* APickup::GetMesh() const
 	return PickupMesh;
 }
 
-bool APickup::isActive()
+void APickup::SetMesh(UStaticMesh* NewMesh)
 {
-	return bIsActive;
+	PickupMesh->SetStaticMesh(NewMesh);
 }
 
 void APickup::SetActive(bool NewPickupState)
@@ -49,14 +50,26 @@ void APickup::SetActive(bool NewPickupState)
 	bIsActive = NewPickupState;
 }
 
-void APickup::WasCollected_Implementation()
+void APickup::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorBeginOverlap(OtherActor);
+
+	if (bIsActive && OtherActor == Cast<AGameDevTVJamCharacter>(UGameDevTVJamStatics::GetGameDevTVJamCharacter(this)))
+	{
+		bIsActive = false;
+		WasCollected();
+	}
+}
+
+void APickup::WasCollected()
 {
 	// Log a debug message
 	FString PickupDebugString = GetName();
-	//UE_LOG(LogTemp, Warning, TEXT("You have collected %s"), *PickupDebugString)
+	UE_LOG(LogTemp, Warning, TEXT("You have collected %s"), *PickupDebugString)
 
-		// Deactive this pickup, though may be unnecessary if I destroy immediately afterwards
-		bIsActive = false;
+	// Deactive this pickup, though may be unnecessary if I destroy immediately afterwards
+	bIsActive = false;
+	
 	// Destroy the pickup
 	Destroy();
 }

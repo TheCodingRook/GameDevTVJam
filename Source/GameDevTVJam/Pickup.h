@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameDevTVJamStatics.h"
 #include "Pickup.generated.h"
 
 /**
@@ -25,34 +26,32 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Pickup")
 		UStaticMeshComponent* GetMesh() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Pickup")
+	void SetMesh(class UStaticMesh* NewMesh);
+
 	UFUNCTION(BlueprintPure, Category = "Pickup")
-		bool isActive();
+	bool isActive() const { return bIsActive; }
 
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
 		void SetActive(bool NewPickupState);
 
-	UFUNCTION(BlueprintCallable, Category = "Pickup")
-		float GetPickupLifeSpan() const { return PickupLifeSpan; }
+	void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// Called when the pickup is collected
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Pickup")
-		void WasCollected();
+	UFUNCTION(BlueprintCallable, Category = "Pickup")
+	virtual void WasCollected();
 
 	bool bIsActive;
 
-	// How long does the pickup remain active?
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup")
-		float PickupLifeSpan; // TODO: Do I need a setter?
 
 	/** Sound to play when Pickup is collected */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Pickup")
 	class USoundBase* PickupSound;
 
-private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pickup", meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* PickupMesh; // forward decleration here
+	class UStaticMeshComponent* PickupMesh; // forward decleration here
 };
