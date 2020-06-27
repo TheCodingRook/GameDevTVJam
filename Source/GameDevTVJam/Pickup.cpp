@@ -52,6 +52,7 @@ void APickup::SetActive(bool NewPickupState)
 
 void APickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
+	
 	Super::NotifyActorBeginOverlap(OtherActor);
 
 	if (bIsActive && OtherActor == Cast<AGameDevTVJamCharacter>(UGameDevTVJamStatics::GetGameDevTVJamCharacter(this)))
@@ -63,10 +64,6 @@ void APickup::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void APickup::WasCollected()
 {
-	// Log a debug message
-	FString PickupDebugString = GetName();
-	UE_LOG(LogTemp, Warning, TEXT("You have collected %s"), *PickupDebugString)
-
 	// Deactive this pickup, though may be unnecessary if I destroy immediately afterwards
 	bIsActive = false;
 	

@@ -30,16 +30,13 @@ public:
 
 	void BeginPlay() override;
 
-	void WasCollected() override;
+	UFUNCTION(BlueprintCallable, Category = "Pickup")
+	virtual void WasCollected() override;
+
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
 	void PlayTimeWidgetAnimation();
-
-	//~ Begin UObject Interface
-	void PostLoad() override;
-	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-	//~ End UObject Interface
-
 	
 	class UMaterialInterface* Gold_Material;
 	UMaterialInterface* Silver_Material;
@@ -58,14 +55,25 @@ public:
 protected:
 	// Set the amount of extra time the pick up gives to the character (in seconds)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Extra Time")
-		float ExtraTime;
+	float ExtraTime;
 
 	// Set the default type to None so we force us to actually pick one specifically
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Pickup Settings")
 	ETimePickupType PickupType = ETimePickupType::None;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Widget")
-	class UWidgetComponent* TimeWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	class UWidgetComponent* Widget;
+
+	// Pointer to the active widget of the pickup (this will be useful for derived pyramid pickup)
+	UPROPERTY(BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true"))
+	UWidgetComponent* ActiveWidget;
+
+#if WITH_EDITORONLY_DATA
+	//~ Begin UObject Interface
+	void PostLoad() override;
+	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+	//~ End UObject Interface
+#endif 
 
 private:
 	// Helper function to call Super::Collected after a short delay

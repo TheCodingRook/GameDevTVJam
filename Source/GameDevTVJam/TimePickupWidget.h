@@ -15,6 +15,6 @@ class GAMEDEVTVJAM_API UTimePickupWidget : public UUserWidget
 	GENERATED_BODY()
 	
 public:
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events", meta = (AllowPrivateAccess = "true", CallInEditor = "true"))
 	void UpdateTimeText(float ExtraTime);
 };

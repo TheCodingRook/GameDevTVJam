@@ -35,14 +35,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
 		void SetActive(bool NewPickupState);
 
-	void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// Called when the pickup is collected
-	UFUNCTION(BlueprintCallable, Category = "Pickup")
 	virtual void WasCollected();
 
 	bool bIsActive;
