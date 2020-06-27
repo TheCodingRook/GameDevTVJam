@@ -54,34 +54,23 @@ void ATimePickup::BeginPlay()
 	Super::BeginPlay();
 
 	ActiveWidget = Widget;
-	Cast<UTimePickupWidget>(ActiveWidget->GetUserWidgetObject())->UpdateTimeText(ExtraTime);
+	if (Cast<UTimePickupWidget>(ActiveWidget->GetUserWidgetObject()))
+	{
+		Cast<UTimePickupWidget>(ActiveWidget->GetUserWidgetObject())->UpdateTimeText(ExtraTime);
+	}
 
-}
-
-void ATimePickup::WasCollected()
-{
-	// Add time to the player's countdown
-	Cast<UMyGameInstance>(GetGameInstance())->AddTime(ExtraTime);
-	
-	// Hide the mesh...
-	PickupMesh->SetVisibility(false);
-
-	// Play pickup sound...
-	UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
-
-	// Animate the TimeWidget
-	PlayTimeWidgetAnimation();
-
-	// Add a short delay for timewidget animation to play before destroying the actor by calling WasCollected in Super class (Pickup)
-	FTimerHandle DelayAfterPickup;
-	// Call the helper function to broadcast the notifier after a delay
-	GetWorldTimerManager().SetTimer(DelayAfterPickup, this, &ATimePickup::DelaySuperCollected, 1.0f, false, -1.f);
 }
 
 void ATimePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	if (bIsActive && OtherActor == Cast<AGameDevTVJamCharacter>(UGameDevTVJamStatics::GetGameDevTVJamCharacter(this)))
 	{
+		// Add time to the player's countdown
+		Cast<UMyGameInstance>(GetGameInstance())->AddTime(ExtraTime);
+
+		// Animate the TimeWidget
+		PlayTimeWidgetAnimation();
+
 		Super::NotifyActorBeginOverlap(OtherActor);
 	}
 }
@@ -147,9 +136,4 @@ void ATimePickup::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 		// Now update the widget to display the update time content
 		Cast<UTimePickupWidget>(Widget->GetUserWidgetObject())->UpdateTimeText(ExtraTime);
 	}
-}
-
-void ATimePickup::DelaySuperCollected()
-{
-	Super::WasCollected();
 }

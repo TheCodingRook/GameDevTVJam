@@ -31,7 +31,6 @@ public:
 	void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Pickup")
-	virtual void WasCollected() override;
 
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 
@@ -74,8 +73,4 @@ protected:
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	//~ End UObject Interface
 #endif 
-
-private:
-	// Helper function to call Super::Collected after a short delay
-	void DelaySuperCollected();
 };

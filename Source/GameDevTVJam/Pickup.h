@@ -44,6 +44,8 @@ protected:
 	// Called when the pickup is collected
 	virtual void WasCollected();
 
+	void DelayDestroyPickup();
+
 	bool bIsActive;
 
 

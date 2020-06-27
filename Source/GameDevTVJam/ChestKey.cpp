@@ -11,8 +11,8 @@ void AChestKey::NotifyKeyBeginOverlap(AActor* OverlappedActor, AActor* OtherActo
 	if (PlayerCharacter)
 	{
 		PlayerCharacter->AddKeyToInventory();
-		GetMesh()->SetVisibility(false);
-		UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
+		//GetMesh()->SetVisibility(false);
+		//UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
 		WasCollected();
 		UGameDevTVJamStatics::GetGameHUD(this)->UpdateKeysFound(PlayerCharacter->GetNumberOfKeys());
 	}

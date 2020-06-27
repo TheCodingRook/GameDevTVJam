@@ -4,6 +4,7 @@
 #include "Pickup.h"
 #include "Engine/StaticMesh.h"
 #include "GameDevTVJamCharacter.h"
+#include "TimerManager.h"
 
 // Sets default values
 APickup::APickup()
@@ -64,9 +65,23 @@ void APickup::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void APickup::WasCollected()
 {
-	// Deactive this pickup, though may be unnecessary if I destroy immediately afterwards
+	// Deactive this pickup, though maybe unnecessary if I destroy immediately afterwards
 	bIsActive = false;
+
+	// Hide this pickup, though - again - maybe unnecessary if I destroy immediately afterwards
+	PickupMesh->SetVisibility(false);
+
+	// Play pickup sound...
+	UGameplayStatics::PlaySoundAtLocation(this, PickupSound, GetActorLocation());
 	
+	// Add a short delay for for anything that needs to be done before destroying the actor (by calling a helper function)
+	FTimerHandle DelayAfterPickup;
+	// Call the helper function to broadcast the notifier after a delay
+	GetWorldTimerManager().SetTimer(DelayAfterPickup, this, &APickup::DelayDestroyPickup, 1.0f, false, -1.f);
+}
+
+void APickup::DelayDestroyPickup()
+{
 	// Destroy the pickup
 	Destroy();
 }
