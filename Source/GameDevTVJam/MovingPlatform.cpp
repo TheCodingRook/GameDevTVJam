@@ -6,6 +6,7 @@
 #include "MyTriggerBox.h"
 #include "TriggerActor.h"
 
+
 // Sets default values
 AMovingPlatform::AMovingPlatform()
 {
@@ -16,12 +17,22 @@ AMovingPlatform::AMovingPlatform()
 	SetRootComponent(Platform);
 
 	Puzzle = CreateDefaultSubobject<UPuzzleComponent>("Puzzle");
+
+	// Initialize some movement settings here
+	SpeedMultiplier = 1.f;
+	OriginalPlayDirection = true;
 }
 
 // Called when the game starts or when spawned
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Movement settings
+	StartingLocation = GetActorLocation();
+	LERP_StartingLocation = StartingLocation;
+
+	//~ Puzzle elements setup
 
 	for (AActor* LinkedActor : Puzzle->GetActorsList())
 	{
@@ -55,3 +66,56 @@ void AMovingPlatform::Tick(float DeltaTime)
 
 }
 
+void AMovingPlatform::AttemptChangeMovement(EPuzzleElementType ElementType)
+{
+	switch (ElementType)
+	{
+	case EPuzzleElementType::NOSwitch:
+		UE_LOG(LogTemp, Warning, TEXT("The implementation for the a Normally-Open switch on a moving platform is not valid yet!"))
+		break;
+	case EPuzzleElementType::Toggle:
+		if ((DistanceToTravel.Y != 0 && DistanceToTravel.Z == 0) || (DistanceToTravel.Y == 0 && DistanceToTravel.Z != 0))
+		{
+			LERP_StartingLocation.X = StartingLocation.X;
+
+			// If platform is moving horizontally
+			if (DistanceToTravel.Y != 0)
+			{
+				// Adjust the LERP starting location in terms of Y
+				LERP_StartingLocation.Y = LERP_StartingLocation.Y + DistanceTraveled.Y;
+				LERP_StartingLocation.Z = StartingLocation.Z;
+
+				// Set the new playback position for the timeline based on portion of distanced traveled on Z axis
+				TimelineNewPlaybackPosition = FMath::Abs(DistanceTraveled.Z / DistanceToTravel.Y) * NativeTimeline->GetTimelineLength();
+			}
+			else
+			{
+				// Adjust the LERP starting location in terms of Z
+				LERP_StartingLocation.Y = StartingLocation.Y;
+				LERP_StartingLocation.Z = StartingLocation.Z + DistanceTraveled.Z;
+
+				// Set the new playback position for the timeline based on portion of distanced traveled on Y axis
+				TimelineNewPlaybackPosition = FMath::Abs(DistanceTraveled.Y / DistanceToTravel.Z) * NativeTimeline->GetTimelineLength();
+			}
+				
+			// Flip the Y/Z in DistanceToTravel
+			float DistanceToTravel_Y_temp = DistanceToTravel.Y;
+			float DistanceToTravel_Z_temp = DistanceToTravel.Z;
+			DistanceToTravel.Y = -DistanceToTravel_Z_temp;
+			DistanceToTravel.Z = -DistanceToTravel_Y_temp;
+
+			ChangeDirection(TimelineNewPlaybackPosition);
+		}
+		break;
+	case EPuzzleElementType::NOSwitch_Rotator:
+		UE_LOG(LogTemp, Warning, TEXT("The implementation for the a Normally-Open Rotator switch on a moving platform is not valid yet!"))
+		break;
+	case EPuzzleElementType::Toggle_Rotator:
+		ChangeRotation();
+		break;
+	case EPuzzleElementType::Type_None:
+		break;
+	default:
+		break;
+	}
+}

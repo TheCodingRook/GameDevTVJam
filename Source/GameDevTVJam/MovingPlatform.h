@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "PuzzleElementComponent.h"
+#include "Components/TimelineComponent.h"
 #include "MovingPlatform.generated.h"
 
 UCLASS()
@@ -35,7 +36,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Movement Settings")
 	FRotator LERP_StartingRotation;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Movement Settings")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Settings")
 	FVector DistanceToTravel;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Movement Settings")
@@ -47,14 +48,31 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Movement Settings")
 	bool OriginalPlayDirection;
 
+	// Pointer reference to save the Blueprint timeline component that handles the movement of the platform (on one axis)
+	UPROPERTY(BlueprintReadWrite, Category = "Movement Settings")
+	UTimelineComponent* NativeTimeline;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// Starts the initial repeating movement of the platform
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
-	void StartMovingPlatform();
+	void StartMovingPlatform(EPuzzleElementType ElementType);
+
+	// Starts the initial repeating movement of the platform
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void RepeatMovement();
 
 	// Attempts to change the way the platform moves
+	UFUNCTION()
+	void AttemptChangeMovement(EPuzzleElementType ElementType);
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
-		void AttemptChangeMovement(EPuzzleElementType ElementType);
+	void ChangeDirection(float NewPosition);
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Events")
+	void ChangeRotation();
+
+private:
+	float TimelineNewPlaybackPosition;
 };
