@@ -3,7 +3,6 @@
 
 #include "SpikeTrap.h"
 #include "PuzzleComponent.h"
-#include "PuzzleElementComponent.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "ActorListComponent.h"
@@ -32,7 +31,8 @@ void ASpikeTrap::BeginPlay()
 	// to find in that position later in the game.
 	if (!bIsDeathFromAboveTrap)
 	{
-		AttemptOperateTrap();
+		// TODO CODINGROOK: HOW DO I AUTOMATICALLY CALL THIS WITHOUT KNOWING THE ENUM THAT CAUSES IT?
+		//AttemptOperateTrap();
 	}
 }
 
@@ -53,7 +53,7 @@ void ASpikeTrap::NotifySpikeTrapBeginOverlap(AActor* OverlappedActor, AActor* Ot
 	OtherActor->TakeDamage(1.f, FDamageEvent::FDamageEvent(),nullptr,nullptr);
 }
 
-void ASpikeTrap::AttemptOperateTrap()
+void ASpikeTrap::AttemptOperateTrap(EPuzzleElementType PuzzleElementType)
 {
 	switch (Puzzle->GetLogicGateType())
 	{
@@ -182,7 +182,7 @@ void ASpikeTrap::AttemptOperateTrap()
 	}
 }
 
-void ASpikeTrap::DeathFromAboveTrap_Implementation()
+void ASpikeTrap::DeathFromAboveTrap_Implementation(EPuzzleElementType PuzzleElementType)
 {
 	OnTriggered();
 }

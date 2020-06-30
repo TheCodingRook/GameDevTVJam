@@ -63,19 +63,21 @@ void ATriggerActor::OnTriggerActivated()
 		if ((int)PuzzleElement->GetTriggerState() * 1)
 		{
 			PuzzleElement->SetElementTriggeredFlag(true);
-			PuzzleElement->OnPuzzleElementActivated.Broadcast();
+			PuzzleElement->OnPuzzleElementActivated.Broadcast(PuzzleElement->GetPuzzleElementType());
+			PuzzleElement->OnPuzzleElementTriggered.Broadcast(PuzzleElement->GetPuzzleElementType());
 		}
 		else
 		{
 			PuzzleElement->SetElementTriggeredFlag(false);
-			PuzzleElement->OnPuzzleElementDeactivated.Broadcast();
+			PuzzleElement->OnPuzzleElementDeactivated.Broadcast(PuzzleElement->GetPuzzleElementType());
+			PuzzleElement->OnPuzzleElementUnTriggered.Broadcast(PuzzleElement->GetPuzzleElementType());
 		}
 		break;
 	case EPuzzleElementType::NOSwitch_Rotator:
 	case EPuzzleElementType::Toggle_Rotator:
 		// Rotators are always triggered true/activated
 		PuzzleElement->SetElementTriggeredFlag(true);
-		PuzzleElement->OnPuzzleElementActivated.Broadcast();
+		PuzzleElement->OnPuzzleElementActivated.Broadcast(PuzzleElement->GetPuzzleElementType());
 		break;
 	default:
 		break;

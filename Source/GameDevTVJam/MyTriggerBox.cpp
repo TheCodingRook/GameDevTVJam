@@ -11,7 +11,7 @@ AMyTriggerBox::AMyTriggerBox()
 
 void AMyTriggerBox::NotifyTriggerBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-	PuzzleElement->OnPuzzleElementActivated.Broadcast();
+	PuzzleElement->OnPuzzleElementActivated.Broadcast(PuzzleElement->GetPuzzleElementType());
 	PuzzleElement->SetElementTriggeredFlag(true);
 }
 

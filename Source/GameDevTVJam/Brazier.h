@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TriggerableActor.h"
+#include "PuzzleElementComponent.h"
 #include "Brazier.generated.h"
 
 /**
@@ -22,7 +23,7 @@ public:
 	void PostLoad() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Brazier Settings", meta = (CallinEditor = true))
-	void NativeToggleFire();
+	void NativeToggleFire(EPuzzleElementType PuzzleElementType);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Brazier Settings")

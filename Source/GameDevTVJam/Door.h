@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TriggerableActor.h"
+#include "PuzzleElementComponent.h"
 #include "Door.generated.h"
 
 /**
@@ -33,5 +34,5 @@ protected:
 
 	// Attempts to either close or open door depending on the elements that triggered it
 	UFUNCTION()
-	void AttemptOperateDoor();
+	void AttemptOperateDoor(EPuzzleElementType PuzzleElementType);
 };

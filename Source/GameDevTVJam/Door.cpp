@@ -3,7 +3,6 @@
 
 #include "Door.h"
 #include "PuzzleComponent.h"
-#include "PuzzleElementComponent.h"
 
 void ADoor::BeginPlay()
 {
@@ -18,10 +17,12 @@ void ADoor::BeginPlay()
 	// This is to initiate any triggering actions that happen offscreen (e.g. if I have placed
 	// a barrel suspended in mid-air which is supposed to fall on a platform trigger for player
 	// to find in that position later in the game.
-	AttemptOperateDoor();
+	
+	// TODO CODINGROOK: HOW DO I CALL THIS AUTOMATICALLY WITH AN ENUM AS INPUT?
+	//AttemptOperateDoor();
 }
 
-void ADoor::AttemptOperateDoor()
+void ADoor::AttemptOperateDoor(EPuzzleElementType PuzzleElementType)
 {
 	switch (Puzzle->GetLogicGateType())
 	{

@@ -31,8 +31,8 @@ enum class ETriggerState : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementTriggered, EPuzzleElementType, ElementType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementUnTriggered, EPuzzleElementType, ElementType);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementActivated);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnPuzzleElementDeactivated);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementActivated, EPuzzleElementType, ElementType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementDeactivated, EPuzzleElementType, ElementType);
 
 /*
  * A generic base component class to implement actors as "puzzle elements" that trigger events or solve other puzzles in combination with

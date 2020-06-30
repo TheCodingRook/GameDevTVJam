@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "TriggerableActor.h"
+#include "PuzzleElementComponent.h"
 #include "SpikeTrap.generated.h"
 
 /**
@@ -22,7 +23,7 @@ public:
 	void ResetTrap();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Trap Settings")
-	void DeathFromAboveTrap();
+	void DeathFromAboveTrap(EPuzzleElementType PuzzleElementType);
 
 	void BeginPlay() override;
 
@@ -56,5 +57,5 @@ protected:
 
 	// Attempts to either close or open door depending on the elements that triggered it
 	UFUNCTION()
-	void AttemptOperateTrap();
+	void AttemptOperateTrap(EPuzzleElementType PuzzleElementType);
 };

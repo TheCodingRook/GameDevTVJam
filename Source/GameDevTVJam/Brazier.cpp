@@ -3,7 +3,6 @@
 
 #include "Brazier.h"
 #include "PuzzleComponent.h"
-#include "PuzzleElementComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Particles/ParticleSystemComponent.h"
@@ -42,7 +41,7 @@ void ABrazier::PostLoad()
 		
 }
 
-void ABrazier::NativeToggleFire()
+void ABrazier::NativeToggleFire(EPuzzleElementType PuzzleElementType)
 {
 	Fire->SetVisibility(!bIsLit);
 	Light->SetVisibility(!bIsLit);
