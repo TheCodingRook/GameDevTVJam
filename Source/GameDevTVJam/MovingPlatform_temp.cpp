@@ -25,9 +25,9 @@ void AMovingPlatform_temp::PostLoad()
 	TInlineComponentArray<UPuzzleComponent*> PuzzleComponent;
 	GetComponents(PuzzleComponent);
 
-	UE_LOG(LogTemp, Warning, TEXT("Found %i ActorListComponents in"), ActorListComponent.Num())
+	//UE_LOG(LogTemp, Warning, TEXT("Found %i ActorListComponents in"), ActorListComponent.Num())
 
-	ActorListComponent[0]->ActorList = PuzzleComponent[0]->GetActorsList();
+	//ActorListComponent[0]->ActorList = PuzzleComponent[0]->GetActorsList();
 }
 
 // Called when the game starts or when spawned
