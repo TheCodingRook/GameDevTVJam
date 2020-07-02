@@ -5,6 +5,7 @@
 #include "PuzzleComponent.h"
 #include "MyTriggerBox.h"
 #include "TriggerActor.h"
+#include "ActorListComponent.h"
 
 
 // Sets default values
@@ -63,6 +64,23 @@ void AMovingPlatform::BeginPlay()
 void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+}
+
+void AMovingPlatform::PostLoad()
+{
+	Super::PostLoad();
+
+	TInlineComponentArray<UActorListComponent*> ActorListComponent;
+	GetComponents(ActorListComponent);
+
+	TInlineComponentArray<UPuzzleComponent*> PuzzleComponent;
+	GetComponents(PuzzleComponent);
+
+	UE_LOG(LogTemp, Warning, TEXT("Found %i PuzzleComponents in %s"), PuzzleComponent.Num(), *GetName())
+	UE_LOG(LogTemp, Warning, TEXT("Found %i ActorListComponents in %s"), ActorListComponent.Num(), *GetName())
+
+	PuzzleComponent[0]->SetActorsList(ActorListComponent[0]->ActorList);
 
 }
 

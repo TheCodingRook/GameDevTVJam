@@ -19,15 +19,16 @@ void AMovingPlatform_temp::PostLoad()
 {
 	Super::PostLoad();
 
-	TInlineComponentArray<UActorListComponent*> ActorListComponent;
-	GetComponents(ActorListComponent);
+	//TInlineComponentArray<UActorListComponent*> ActorListComponent;
+	//GetComponents(ActorListComponent);
 
-	TInlineComponentArray<UPuzzleComponent*> PuzzleComponent;
-	GetComponents(PuzzleComponent);
+	//TInlineComponentArray<UPuzzleComponent*> PuzzleComponent;
+	//GetComponents(PuzzleComponent);
 
 	//UE_LOG(LogTemp, Warning, TEXT("Found %i ActorListComponents in"), ActorListComponent.Num())
-
 	//ActorListComponent[0]->ActorList = PuzzleComponent[0]->GetActorsList();
+
+	//PuzzleComponent[0]->SetActorsList(ActorListComponent[0]->ActorList);
 }
 
 // Called when the game starts or when spawned
