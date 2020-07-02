@@ -20,8 +20,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void PostLoad() override;
-
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Platform")
 	class UStaticMeshComponent* Platform;
