@@ -75,15 +75,6 @@ void ATimePickup::NotifyActorBeginOverlap(AActor* OtherActor)
 	}
 }
 
-#if WITH_EDITORONLY_DATA
-void ATimePickup::PostLoad()
-{
-	Super::PostLoad();
-
-	//Cast<UTimePickupWidget>(Widget->GetUserWidgetObject())->UpdateTimeText(ExtraTime);
-}
-#endif
-
 void ATimePickup::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);

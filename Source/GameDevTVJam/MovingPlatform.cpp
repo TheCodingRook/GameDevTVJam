@@ -39,6 +39,19 @@ void AMovingPlatform::BeginPlay()
 		if (LinkedActor->ActorHasTag(FName("SpawnsPuzzleElement")))
 		{
 			// deal with linking spawned puzzle elements at runtime
+			TArray<AActor*> ChildActors;
+			LinkedActor->GetAllChildActors(ChildActors);
+
+			TInlineComponentArray<UPuzzleElementComponent*> PuzzleElementComponents;
+			for (AActor* ChildActor : ChildActors)
+			{
+				ChildActor->GetComponents(PuzzleElementComponents);
+				// Check the list if it's non-empty and if so add the PuzzleElement in the PuzzleElement list
+				if (PuzzleElementComponents.Num() != 0)
+				{
+					Puzzle->AddPuzzleElement(PuzzleElementComponents[0]);
+				}
+			}
 		}
 	}
 

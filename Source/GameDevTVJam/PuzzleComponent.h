@@ -52,11 +52,7 @@ public:
 
 	LogicGateType GetLogicGateType() const { return ElementsLogic; }
 
-	// TEMP FUNCTION - DELETE AFTERWARDS
-	UFUNCTION()
-		void SetActorsList(TArray<AActor*> ArrayToSet) { ActorsList = ArrayToSet; }
-	// DELETE AFTERWARDS!!!
-
+	void AddPuzzleElement(UPuzzleElementComponent* NewPuzzleElement);
 
 protected:
 	// What type of logic connects the various puzzle elements?

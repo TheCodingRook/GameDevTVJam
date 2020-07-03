@@ -5,7 +5,6 @@
 #include "PuzzleComponent.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "ActorListComponent.h"
 
 void ASpikeTrap::BeginPlay()
 {
@@ -31,8 +30,8 @@ void ASpikeTrap::BeginPlay()
 	// to find in that position later in the game.
 	if (!bIsDeathFromAboveTrap)
 	{
-		// TODO CODINGROOK: HOW DO I AUTOMATICALLY CALL THIS WITHOUT KNOWING THE ENUM THAT CAUSES IT?
-		//AttemptOperateTrap();
+		
+		AttemptOperateTrap(EPuzzleElementType::Toggle);
 	}
 }
 

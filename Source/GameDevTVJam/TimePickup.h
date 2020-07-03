@@ -69,7 +69,6 @@ protected:
 
 #if WITH_EDITORONLY_DATA
 	//~ Begin UObject Interface
-	void PostLoad() override;
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 	//~ End UObject Interface
 #endif 

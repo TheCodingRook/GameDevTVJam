@@ -34,6 +34,11 @@ bool UPuzzleComponent::AreAllPuzzleElementsActive()
 	
 }
 
+void UPuzzleComponent::AddPuzzleElement(UPuzzleElementComponent* NewPuzzleElement)
+{
+	PuzzleElementsList.AddUnique(NewPuzzleElement);
+}
+
 // Called when the game starts
 void UPuzzleComponent::BeginPlay()
 {
