@@ -44,7 +44,7 @@ bool ATriggerableActor::ORTest()
 {
 	for (UPuzzleElementComponent* PuzzleElement : Puzzle->GetPuzzleElementsList())
 	{
-		if (PuzzleElement->IsTriggered())
+		if (PuzzleElement->GetTriggerState()==ETriggerState::On)
 		{
 			return true;
 		}
@@ -64,7 +64,7 @@ bool ATriggerableActor::XORTest()
 
 	for (UPuzzleElementComponent* PuzzleElement : Puzzle->GetPuzzleElementsList())
 	{
-		if (PuzzleElement->IsTriggered())
+		if (PuzzleElement->GetTriggerState() == ETriggerState::On)
 		{
 			TriggerCount++;
 		}

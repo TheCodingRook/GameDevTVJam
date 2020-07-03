@@ -20,7 +20,7 @@ bool UPuzzleComponent::AreAllPuzzleElementsActive()
 	{
 		for (UPuzzleElementComponent* PuzzleElement : PuzzleElementsList)
 		{
-			if (!PuzzleElement->IsTriggered())
+			if (PuzzleElement->GetTriggerState()==ETriggerState::Off)
 			{
 				return false;
 			}

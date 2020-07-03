@@ -22,8 +22,8 @@ public:
 	void BeginPlay() override;
 	void PostLoad() override;
 	
-	UFUNCTION(BlueprintCallable, Category = "Brazier Settings", meta = (CallinEditor = true))
-	void NativeToggleFire(EPuzzleElementType PuzzleElementType);
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void ToggleFireEvent(EPuzzleElementType PuzzleElementType);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Brazier Settings")
@@ -38,4 +38,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Brazier Settings")
 	bool bIsLit = true;
 
+private:
+	UFUNCTION(Category = "Brazier Settings", meta = (CallinEditor = true))
+	void ToggleFire();
 };

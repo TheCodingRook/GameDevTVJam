@@ -13,6 +13,7 @@ void AMyTriggerBox::NotifyTriggerBeginOverlap(AActor* OverlappedActor, AActor* O
 {
 	PuzzleElement->OnPuzzleElementActivated.Broadcast(PuzzleElement->GetPuzzleElementType());
 	PuzzleElement->SetElementTriggeredFlag(true);
+	PuzzleElement->SetTriggerState(ETriggerState::On);
 }
 
 void AMyTriggerBox::BeginPlay()

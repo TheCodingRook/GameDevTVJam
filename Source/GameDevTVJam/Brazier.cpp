@@ -28,8 +28,8 @@ void ABrazier::BeginPlay()
 
 	for (UPuzzleElementComponent* PuzzleElement : Puzzle->GetPuzzleElementsList())
 	{
-		PuzzleElement->OnPuzzleElementActivated.AddDynamic(this, &ABrazier::NativeToggleFire);
-		PuzzleElement->OnPuzzleElementDeactivated.AddDynamic(this, &ABrazier::NativeToggleFire);
+		PuzzleElement->OnPuzzleElementActivated.AddDynamic(this, &ABrazier::ToggleFireEvent);
+		PuzzleElement->OnPuzzleElementDeactivated.AddDynamic(this, &ABrazier::ToggleFireEvent);
 	}
 }
 
@@ -41,7 +41,12 @@ void ABrazier::PostLoad()
 		
 }
 
-void ABrazier::NativeToggleFire(EPuzzleElementType PuzzleElementType)
+void ABrazier::ToggleFireEvent(EPuzzleElementType PuzzleElementType)
+{
+	ToggleFire();
+}
+
+void ABrazier::ToggleFire()
 {
 	Fire->SetVisibility(!bIsLit);
 	Light->SetVisibility(!bIsLit);

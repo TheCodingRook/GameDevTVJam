@@ -26,7 +26,7 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Door movement")
-	bool bIsOpen;
+	bool bIsOpen = false;
 
 	// How much to open the door by (vertical movement intended here)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Door movement")

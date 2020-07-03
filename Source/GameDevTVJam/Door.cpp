@@ -19,7 +19,7 @@ void ADoor::BeginPlay()
 	// to find in that position later in the game.
 	
 	// TODO CODINGROOK: HOW DO I CALL THIS AUTOMATICALLY WITH AN ENUM AS INPUT?
-	//AttemptOperateDoor();
+	AttemptOperateDoor(EPuzzleElementType::Toggle);
 }
 
 void ADoor::AttemptOperateDoor(EPuzzleElementType PuzzleElementType)
