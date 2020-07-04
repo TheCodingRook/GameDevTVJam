@@ -28,9 +28,6 @@ enum class ETriggerState : uint8
 	Selector UMETA(DisplayName = "Selector")
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementTriggered, EPuzzleElementType, ElementType);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementUnTriggered, EPuzzleElementType, ElementType);
-
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementActivated, EPuzzleElementType, ElementType);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPuzzleElementDeactivated, EPuzzleElementType, ElementType);
 
@@ -51,19 +48,6 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	void SetElementTriggeredFlag(bool InFlag);
-
-	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
-	FOnPuzzleElementTriggered OnPuzzleElementTriggered;
-
-	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered as off or false or closed etc.
-	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
-	FOnPuzzleElementUnTriggered OnPuzzleElementUnTriggered;
-
-	///////////////////////////
-	// NEW VERSIONS
 	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnPuzzleElementActivated OnPuzzleElementActivated;
@@ -71,16 +55,7 @@ public:
 	// Delegate to nofity the Actor which this component's actor is linked with, that this PuzzleElement was triggered as off or false or closed etc.
 	UPROPERTY(BlueprintAssignable, BlueprintCallable, Category = "Delegates")
 	FOnPuzzleElementDeactivated OnPuzzleElementDeactivated;
-
-
-	// END - NEW VERSIONS
-	//////////////////////////////
-	UFUNCTION(BlueprintPure, Category = "Trigger")
-	bool IsTriggered() const { return bIsTriggered; }
-
-	UFUNCTION(BlueprintCallable, Category = "Trigger")
-	void ToggleTrigger();
-
+	
 	// Set the puzzle element type (maybe best set by a constructor?) 
 	UFUNCTION(BlueprintCallable, Category = "Puzzle Type")
 	void SetPuzzleElementType(EPuzzleElementType InElementType);
@@ -110,9 +85,4 @@ protected:
 	// The state this puzzle element is in , i.e. on/off or selector (as per the above enumeration class)
 	UPROPERTY(EditAnywhere, Category = "Puzzle Type")
 	ETriggerState TriggerState;
-
-private:
-	// The main boolean member field that determines if this PuzzleElement is activated or not
-	UPROPERTY(EditAnywhere, Category = "Trigger")
-	bool bIsTriggered;
 };

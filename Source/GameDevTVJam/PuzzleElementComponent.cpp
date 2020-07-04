@@ -57,16 +57,6 @@ void UPuzzleElementComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	// ...
 }
 
-void UPuzzleElementComponent::SetElementTriggeredFlag(bool InFlag)
-{
-	bIsTriggered = InFlag;
-}
-
-void UPuzzleElementComponent::ToggleTrigger()
-{
-	bIsTriggered = !bIsTriggered;
-}
-
 void UPuzzleElementComponent::SetPuzzleElementType(EPuzzleElementType InElementType)
 {
 	PuzzleElementType = InElementType;
